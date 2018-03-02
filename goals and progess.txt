@@ -28,4 +28,5 @@ DONE:
    then readded the remote origin and pushed to github)
 - added html and modified app.ts code
 - moved app.ts into src folder
+- added build task that copies index.html
 - installed sass & live sass compiler extensions
