@@ -1,0 +1,20 @@
+TRY TO STAY FOCUSSED!
+
+- use git
+- use Typescript (for unittests too)
+- do unittests (run automatically on save)
+- use Sass (auto transpile)
+- use Webkit to bundle everything
+- use vscode
+- configure all yourself
+
+DONE:
+- install/update tsc (npm install -g typescript //  npm -g update typescript)
+- create tsconfig file (tsc - init)
+- modify tsconfig (target es2015, enable sourcemaps, moduletype=amd, set output file)
+- write some ts code for testing, build ts (CTRL+SHIFT+B)
+- create 2048 repo on github
+- install git / restart vscode, select initialize repository
+- configure your email and username for git:
+   git config --global user.email "your@email.com"
+   git config --global user.name "yourUserName"
