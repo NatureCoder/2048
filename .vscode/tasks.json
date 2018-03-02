@@ -4,6 +4,17 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "build all",
+            "dependsOn": [
+                "tsc",
+                "copy index.html"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
             "label": "tsc",
             "type": "typescript",
             "tsconfig": "tsconfig.json",
@@ -12,16 +23,9 @@
             ]
         },
         {
-            "type": "shell",
-            "dependsOn": [
-                "tsc"
-            ],
             "label": "copy index.html",
+            "type": "shell",
             "command": "copy ./src/index.html ./output/index.html",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
             "problemMatcher": []
         }
     ]
