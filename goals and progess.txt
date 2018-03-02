@@ -33,3 +33,6 @@ DONE:
 - added sass file and configured settings of extension
 - configured live server
 - created package.json and installed mocha as dev dependency
+- added a simple test and configures "run tests" task
+- reverted back to common.js module type (needed for ts-node)
+- added ts-node and configured mocha to use it 
