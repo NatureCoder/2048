@@ -23,3 +23,9 @@ DONE:
 - config remote git repos: git remote add origin https://github.com/NatureCoder/2048.git
 - push to origin (from vscode)
 - created tasks.json (Configure Default Build Task)
+- cleaned up git history 
+  (needed to remove remote origin before doing interactive rebase using SoureTree
+   then readded the remote origin and pushed to github)
+- added html and modified app.ts code
+- moved app.ts into src folder
+- installed sass & live sass compiler extensions
