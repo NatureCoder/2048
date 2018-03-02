@@ -1,12 +1,6 @@
 {
     "eslint.enable": false,
-    "liveSassCompile.settings.formats": [
-        {
-            "format": "expanded",
-            "extensionName": ".css",
-            "savePath": "/output"
-        }
-    ],
     "liveServer.settings.CustomBrowser": "chrome",
-    "liveServer.settings.root": "/output"
+    "liveServer.settings.root": "/dist",
+    "editor.detectIndentation": false
 }

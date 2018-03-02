@@ -36,3 +36,18 @@ DONE:
 - added a simple test and configures "run tests" task
 - reverted back to common.js module type (needed for ts-node)
 - added ts-node and configured mocha to use it 
+- renamed output to dist
+- added webpack as dev dependency
+- added webpack.config.js
+- renamed app.ts -> index.ts
+- added ts-loader and typescript to dev dependencies and configured webpack to use them
+- added style-loader, css-loader,  sass-loader & node-sass as dev dependencies and configured webpack to use them
+- added scripts in package.json to run webpack (build) or webpack --watch (start)
+- rewrote tasks in tasks.json to use scripts defined in package.json
+- added html-webpack-plugin to dev dependencies and configured webpack to use it
+- changed index.html to work as a template
+- installed https://github.com/ragnarol/Awesome-Typescript-Problem-Matcher to use in tasks.json
+- added file loader and use it for bundling images and fonts
+- added clean-webpack-plugin and use it to clean the dist folder before builds
+- added webpack-merge to merge common webpack settings into production & development config
+- added uglifyjs-webpack-plugin to minify js and do tree shaking (in prod mode)

@@ -4,29 +4,21 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build all",
-            "dependsOn": [
-                "tsc",
-                "copy index.html"
-            ],
+            "label": "build using webpack",
+            "type": "shell",
+            "command": "npm run-script build",
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "problemMatcher":  ["$awesometsc", "$awesomets-lint"]
         },
         {
-            "label": "tsc",
-            "type": "typescript",
-            "tsconfig": "tsconfig.json",
-            "problemMatcher": [
-                "$tsc"
-            ]
-        },
-        {
-            "label": "copy index.html",
+            "label": "watch using webpack",
             "type": "shell",
-            "command": "copy ./src/index.html ./output/index.html",
-            "problemMatcher": []
+            "command": "npm start",
+            "group": "build",
+            "problemMatcher":  ["$awesometsc", "$awesomets-lint"]
         },
         {
             "label": "run tests",
