@@ -10,6 +10,9 @@ module.exports = merge(common, {
             filename: 'index.html',
             template: 'index.html',
             title: '2048 game - development'
+        }),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('development')
         })
     ],
     output: {

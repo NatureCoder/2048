@@ -29,7 +29,7 @@
   },
   "scripts": {
     "test": "mocha -r ts-node/register test/**/*.ts",
-    "build": "webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.prod.js --progress",
     "start": "webpack --config webpack.dev.js --watch"
   },
   "repository": {
