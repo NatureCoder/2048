@@ -9,12 +9,17 @@ TRY TO STAY FOCUSSED!
 - configure all yourself
 
 DONE:
+- update vscode
+- disable eslint
 - install/update tsc (npm install -g typescript //  npm -g update typescript)
 - create tsconfig file (tsc - init)
-- modify tsconfig (target es2015, enable sourcemaps, moduletype=amd, set output file)
+- modify tsconfig (target es2015, enable sourcemaps, module=amd, set output file)
 - write some ts code for testing, build ts (CTRL+SHIFT+B)
 - create 2048 repo on github
-- install git / restart vscode, select initialize repository
+- install git / restart vscode, select initialize repository (in vscode)
 - configure your email and username for git:
    git config --global user.email "your@email.com"
    git config --global user.name "yourUserName"
+- config remote git repos: git remote add origin https://github.com/NatureCoder/2048.git
+- push to origin (from vscode)
+- created tasks.json (Configure Default Build Task)
