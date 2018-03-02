@@ -30,3 +30,6 @@ DONE:
 - moved app.ts into src folder
 - added build task that copies index.html
 - installed sass & live sass compiler extensions
+- added sass file and configured settings of extension
+- configured live server
+- create package.json and installed mocha as dev dependency

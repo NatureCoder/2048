@@ -6,5 +6,7 @@
             "extensionName": ".css",
             "savePath": "/output"
         }
-    ]
+    ],
+    "liveServer.settings.CustomBrowser": "chrome",
+    "liveServer.settings.root": "/output"
 }
