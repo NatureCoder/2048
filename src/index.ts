@@ -1,10 +1,10 @@
 import './styles.sass';
 
-document.addEventListener("DOMContentLoaded", function (ev: Event): any {
+document.addEventListener('DOMContentLoaded', function(ev: Event): void {
     const btn = document.getElementById('test') as HTMLButtonElement;
-    btn.addEventListener('click', (ev) => {
+    btn.addEventListener('click', (evt) => {
         alert('Hello World!');
-        ev.stopPropagation();
+        evt.stopPropagation();
         console.log('test');
     });
 });

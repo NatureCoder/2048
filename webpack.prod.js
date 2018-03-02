@@ -6,13 +6,30 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = merge(common, {
     devtool: 'source-map',
     mode: 'development',
+    module: {
+        rules: [
+            // PRE-LOADERS
+            {
+                enforce: 'pre',
+                test: /\.ts$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'tslint-loader',
+                    options: {
+                        emitErrors: true,
+                        failOnHint: true
+                    }
+                }
+            },
+        ]
+    },
     plugins: [
         new UglifyJSPlugin({
             sourceMap: true
         }),
         new HtmlWebpackPlugin({
             filename: 'index.html',
-            template: './src/index.html',
+            template: 'index.html',
             title: '2048 game - production'
         })
     ],

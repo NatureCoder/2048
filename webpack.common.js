@@ -1,10 +1,21 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
+const SRC = path.resolve( __dirname, 'src' );
+const DIST = path.resolve(__dirname, 'dist');
+
 module.exports = {
-    entry: './src/index.ts',
+    context: SRC,
+    entry: 'index.ts',
     module: {
         rules: [
+                // PRE-LOADERS
+                {
+                    enforce: 'pre',
+                    test: /\.js$/,
+                    use: 'source-map-loader'
+                },
+                // LOADERS
                 {
                     test: /\.tsx?$/,
                     use: 'ts-loader',
@@ -37,12 +48,16 @@ module.exports = {
             ]
     },
     resolve: {
-        extensions: [ '.tsx', '.ts', '.js' ]
+        extensions: [ '.tsx', '.ts', '.js' ],
+        modules: [
+            SRC,
+            'node_modules'
+]
     },
     output: {
-        path: path.resolve(__dirname, 'dist')
+        path: DIST
     },
     plugins: [
-        new CleanWebpackPlugin(['dist']),
-    ],
+        new CleanWebpackPlugin([DIST]),
+    ]
 };

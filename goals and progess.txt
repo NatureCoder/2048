@@ -7,6 +7,7 @@ TRY TO STAY FOCUSSED!
 - use Webkit to bundle everything
 - use vscode
 - configure all yourself
+- compare with some template
 
 DONE:
 - update vscode
@@ -51,3 +52,5 @@ DONE:
 - added clean-webpack-plugin and use it to clean the dist folder before builds
 - added webpack-merge to merge common webpack settings into production & development config
 - added uglifyjs-webpack-plugin to minify js and do tree shaking (in prod mode)
+- added souremap-loader to support source maps of 3th party js libraries
+- added ts-lint production mode
