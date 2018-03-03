@@ -1,10 +1,10 @@
 import {Grid} from './grid';
-import {randomInt} from './helpers';
+import {randomInt, nf} from './helpers';
 
 const filledAtStart = 2;
 
 export class Game {
-    private grid: Grid;
+    public readonly grid: Grid;
     constructor() {
         this.grid = new Grid();
     }
@@ -15,7 +15,14 @@ export class Game {
         }
     }
     public show(): void {
-        return;
+        let s = '';
+        for (const row of this.grid.rows) {
+            for (const cell of row) {
+                s = s + ' ' + nf(cell.val, 4);
+            }
+            s += '\n';
+        }
+        console.log(s);
     }
     private newCellValue(): number {
         return randomInt(100) < 50 ? 2 : 4;

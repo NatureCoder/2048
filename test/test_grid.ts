@@ -5,6 +5,7 @@ import { Grid } from '../src/grid';
 
 describe('Grid', function() {
     const grid = new Grid();
+    const total = grid.width * grid.height;
     describe('rows', function() {
         it('should return an array of 4 rows', function() {
             expect(grid.rows.length).to.equal(4);
@@ -41,14 +42,12 @@ describe('Grid', function() {
     });
     describe('emptyCells', function() {
         it('should return an array of width x height cells', function() {
-            const total = grid.width * grid.height;
             const empties = grid.emptyCells();
             expect(empties.length).to.equal(total);
         });
     });
     describe('randomEmptyCell', function() {
         it('should return an empty cell every time', function() {
-            const total = grid.width * grid.height;
             for (let i = 0; i < total; i++) {
                 const cell = grid.randomEmptyCell();
                 expect(cell!.val).to.equal(0);
@@ -58,6 +57,12 @@ describe('Grid', function() {
         it('should return null when there are no more empty cells', function() {
             const cell = grid.randomEmptyCell();
             expect(cell).to.equal(null);
+        });
+    });
+    describe('filledCells', function() {
+        it('should return width x height cells after all has been filled', function() {
+            const filled = grid.filledCells();
+            expect(filled.length).to.equal(total);
         });
     });
 });

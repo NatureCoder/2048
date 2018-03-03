@@ -6,7 +6,7 @@ export class Grid {
     public readonly height = 4;
     public readonly rows: Cell[][];
     public readonly cols: Cell[][];
-    private cells: Cell[] = [];
+    public readonly cells: Cell[] = [];
     constructor() {
         this.rows = [];
         this.cols = [];
@@ -27,6 +27,9 @@ export class Grid {
     }
     public emptyCells(): Cell[] {
         return this.cells.filter((c) => c.empty() );
+    }
+    public filledCells(): Cell[] {
+        return this.cells.filter((c) => !c.empty() );
     }
     public randomEmptyCell(): Cell|null {
         const empty = this.emptyCells();
