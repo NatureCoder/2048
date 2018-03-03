@@ -1,5 +1,7 @@
 import './styles.sass';
 
+
+
 document.addEventListener('DOMContentLoaded', function(ev: Event): void {
     const btn = document.getElementById('test') as HTMLButtonElement;
     btn.addEventListener('click', (evt) => {

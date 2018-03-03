@@ -1,0 +1,61 @@
+/*  2048 animation effect */
+body {
+	background: #ddd;
+	margin: 0;
+	padding: 0;
+	--fontsize: 30px;
+	--cellsize: 90px;
+	--cellmargin: 5px;
+	--duration: 0.3s;
+}
+.cntnr {
+ 	margin: 20px;
+	display: inline-block;;
+	position: relative;
+	border: 1px solid #333;
+	font-size: 0;
+}
+.cell {
+	width: var(--cellsize);
+	height: var(--cellsize);
+	background: pink;
+	margin: var(--cellmargin);
+	margin-right: 0px;
+	border: 2px solid red;
+	color: red;
+	text-align: center;
+	line-height: var(--cellsize);
+	font-family: Arial;
+	font-size: var(--fontsize);
+	font-weight: normal;
+	display: inline-block;
+	position: relative;
+	user-select: none;
+	box-sizing: border-box;
+	overflow: hidden;
+	transition-duration: var(--duration);
+	transition-property: all;
+	transition-timing-function: ease-in-out;
+	top: 0;
+	left: 0;
+}
+.cell:last-child {
+  	margin-right: var(--cellmargin);
+}
+/*  animation effect */
+.cntnr:hover .cell:nth-child(1) {
+	left: calc(var(--cellsize) + var(--cellmargin));
+}
+.cntnr:hover .cell:nth-child(2) {
+	font-size: 0;
+}
+.cntnr .cell:nth-child(2):after {
+	content: "2048";
+	transition-duration: var(--duration);
+    transition-property: all;
+    transition-timing-function: ease-in-out;	
+    font-size: 0;
+}
+.cntnr:hover .cell:nth-child(2):after {
+	font-size: var(--fontsize);
+}
