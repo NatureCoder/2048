@@ -9,11 +9,9 @@ export class Pos {
 
 export class Cell {
     public pos: Pos;
-    public id: string;
     public val: number;
     private merged: boolean;
-    constructor(id: string, pos?: Pos, val?: number) {
-        this.id = id;
+    constructor(pos?: Pos, val?: number) {
         this.pos = pos ? pos : new Pos();
         this.val = val ? val : 0;
         this.merged = false;

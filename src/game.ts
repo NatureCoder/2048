@@ -15,7 +15,7 @@ export class Game {
             cell!.val = this.newCellValue();
         }
     }
-    public processRowOrCol(rowOrCol: Cell[]): Cell[] {
+    public processRowOrCol(rowOrCol: Cell[]): boolean {
         function _shiftValuesRight(cells: Cell[], startIdx: number): boolean {
             let changed = false;
             let i = startIdx;
@@ -45,13 +45,14 @@ export class Game {
             }
             return changed;
         }
-
         const result = rowOrCol;
         let progress = false;
+        let changes = false;
         do {
             progress = _shiftOrMergeValues(result);
+            changes = changes || progress;
         } while (progress);
-        return result;
+        return changes;
     }
     public show(): void {
         let s = '';
