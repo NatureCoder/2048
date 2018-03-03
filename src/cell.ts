@@ -7,27 +7,21 @@ export class Pos {
     }
 }
 
+export type CellOrNull = Cell | null;
+
 export class Cell {
     public pos: Pos;
     public val: number;
-    private merged: boolean;
-    constructor(pos?: Pos, val?: number) {
+    public merged: boolean;
+    constructor(val: number, pos?: Pos, ) {
         this.pos = pos ? pos : new Pos();
-        this.val = val ? val : 0;
+        this.val = val;
         this.merged = false;
     }
-    public resetMerged(): void {
-        this.merged = false;
-    }
-    public empty(): boolean {
-        return (this.val === 0);
-    }
-    public canMergeWith(other: Cell): boolean {
-        return (!this.merged) && (!other.merged) && (this.val === other.val);
-    }
-    public mergeWith(other: Cell): void {
-        this.val = this.val + other.val;
-        other.val = 0;
-        this.merged = true; // we can only merge once per move
+    public canMergeWith(other: CellOrNull): boolean {
+        return (other !== null)
+                && (!this.merged)
+                && (!other.merged)
+                && (this.val === other.val);
     }
 }

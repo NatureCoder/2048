@@ -1,4 +1,4 @@
-import {Cell} from './cell';
+import {Cell, CellOrNull} from './cell';
 import {Grid} from './grid';
 import {randomInt, nf} from './helpers';
 
@@ -11,32 +11,39 @@ export class Game {
     }
     public start(): void {
         for (let i = 0; i < filledAtStart; i++) {
-            const cell = this.grid.randomEmptyCell();
-            cell!.val = this.newCellValue();
+            const pos = this.grid.randomEmptyPosition();
+            this.grid.addCell(pos!, this.newCellValue());
         }
     }
-    public processRowOrCol(rowOrCol: Cell[]): boolean {
-        function _shiftValuesRight(cells: Cell[], startIdx: number): boolean {
+    public processRowOrCol(rowOrCol: CellOrNull[]): boolean {
+
+        const self = this;
+
+        function _shiftValuesRight(cells: CellOrNull[], startIdx: number): boolean {
             let changed = false;
             let i = startIdx;
             while (i > 0) {
-                cells[i].val = cells[i - 1].val;
-                changed = changed || (cells[i].val !== 0);
+                const next = cells[i - 1];
+                const curr = cells[i];
+                // TODO update positions correctly here (needs proper direction)
+                cells[i] = cells[i - 1];
+                changed = changed || (cells[i] !== null);
                 i--;
             }
-            cells[0].val = 0; // insert empty val in left most
+            cells[0] = null; // insert empty val in left most slot
             return changed;
         }
-        function _shiftOrMergeValues(cells: Cell[]): boolean {
+        function _shiftOrMergeCells(cells: CellOrNull[]): boolean {
             let changed = false;
             let i = rowOrCol.length - 1;
             while (i > 0) {
                 const curr = cells[i];
                 const prev = cells[i - 1];
-                if (curr.empty()) {
+                if (!curr) {
                     changed = changed || _shiftValuesRight(cells, i);
                 } else if (curr.canMergeWith(prev)) {
-                    curr.mergeWith(prev);
+                    self.grid.mergeCellWith(curr, prev!);
+                    cells[i - 1] = null;
                     changed = true;
                 } else {
                     // keep at same pos, no progress
@@ -49,16 +56,20 @@ export class Game {
         let progress = false;
         let changes = false;
         do {
-            progress = _shiftOrMergeValues(result);
+            progress = _shiftOrMergeCells(result);
             changes = changes || progress;
         } while (progress);
         return changes;
     }
     public show(): void {
         let s = '';
-        for (const row of this.grid.rows) {
+        for (const row of this.grid.rows()) {
             for (const cell of row) {
-                s = s + ' ' + nf(cell.val, 4);
+                if (cell) {
+                    s = s + ' ' + nf(cell.val, 4);
+                } else {
+                    s = s + ' ' + '    ';
+                }
             }
             s += '\n';
         }

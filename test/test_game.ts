@@ -3,7 +3,7 @@ import { expect } from 'chai';
 
 import { Grid } from '../src/grid';
 import { Game } from '../src/game';
-import { Cell } from '../src/cell';
+import { Cell, CellOrNull } from '../src/cell';
 
 describe('Game', function() {
     const grid = new Grid(4);
@@ -19,25 +19,25 @@ describe('Game', function() {
         });
     });
 
-    function _rowOrColFromString(s: string): Cell[] {
+    function _rowOrColFromString(s: string): CellOrNull[] {
         const rowOrCol = [];
-        for (const val of s.split(' ')) {
-            const cell = new Cell(undefined, parseInt(val, 10));
+        for (const valstr of s.split(' ')) {
+            const val = parseInt(valstr, 10);
+            const cell = val ? new Cell(val) : null;
             rowOrCol.push(cell);
         }
         return rowOrCol;
     }
-    function _rowOrColTotring(rowOrCol: Cell[]): string {
+    function _rowOrColTotring(rowOrCol: CellOrNull[]): string {
         let result = '';
         for (const cell of rowOrCol) {
-            result += ' ' + cell.val.toString();
+            const s = cell ? cell.val.toString() : 0;
+            result += ' ' + s;
         }
         return result.trim();
     }
     type TestVal = [string, string];
     const testVals: TestVal[] = [
-        ['0 2 0 2', '0 0 0 4'],
-        ['2 0 2 0', '0 0 0 4'],
         ['2 0 2 2', '0 0 2 4'],
         ['2 4 4 2', '0 2 8 2'],
         ['2 2 4 4', '0 0 4 8'],
@@ -46,6 +46,8 @@ describe('Game', function() {
         ['0 0 0 0', '0 0 0 0'],
         ['2 4 2 4', '2 4 2 4'],
         ['2 0 2 4', '0 0 4 4'],
+        ['0 2 0 2', '0 0 0 4'],
+        ['2 0 2 0', '0 0 0 4'],
     ];
     describe('processRowOrCol', function() {
         for (const testval of testVals) {
