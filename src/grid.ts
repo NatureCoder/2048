@@ -6,7 +6,7 @@ export class Grid {
     public readonly height = 4;
     public readonly rows: Cell[][];
     public readonly cols: Cell[][];
-    public readonly cells: Cell[] = [];
+    private cells: Cell[] = [];
     constructor() {
         this.rows = [];
         this.cols = [];
@@ -35,5 +35,10 @@ export class Grid {
         const empty = this.emptyCells();
         const idx = randomInt(empty.length);
         return empty.length ? empty[idx] : null;
+    }
+    public resetMerged(): void {
+        for (const cell of this.cells) {
+            cell.resetMerged();
+        }
     }
 }
