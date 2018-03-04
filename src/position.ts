@@ -1,4 +1,4 @@
-import { Direction } from './directions';
+import { Direction } from './direction';
 
 export class Pos {
     public x: number;

@@ -1,4 +1,4 @@
-import {Pos} from './pos';
+import {Pos} from './position';
 
 export type CellOrNull = Cell | null;
 

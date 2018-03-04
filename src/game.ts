@@ -1,5 +1,5 @@
-import {Pos} from './pos';
-import {Direction, direction, DIRECTIONS} from './directions';
+import {Pos} from './position';
+import {Direction, direction, DIRECTIONS} from './direction';
 import {Cell, CellOrNull} from './cell';
 import {Grid} from './grid';
 import {randomInt, nf} from './helpers';

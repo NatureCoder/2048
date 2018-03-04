@@ -4,7 +4,8 @@ import { expect } from 'chai';
 import { Grid } from '../src/grid';
 import { Game } from '../src/game';
 import { Cell, CellOrNull } from '../src/cell';
-import { direction } from '../src/directions';
+import { Pos } from '../src/position';
+import { direction } from '../src/direction';
 
 describe('Game', function() {
     const grid = new Grid(4);

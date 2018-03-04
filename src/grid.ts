@@ -1,4 +1,4 @@
-import {Pos} from './pos';
+import {Pos} from './position';
 import {Cell, CellOrNull} from './cell';
 import {randomInt} from './helpers';
 
