@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import { Grid } from '../src/grid';
 import { Game } from '../src/game';
 import { Cell, CellOrNull } from '../src/cell';
+import { direction } from '../src/directions';
 
 describe('Game', function() {
     const grid = new Grid(4);
@@ -56,7 +57,7 @@ describe('Game', function() {
             const testdescr = 'input of "' + test  + '" should return "' + expected + '"';
             it(testdescr, function() {
                 const rowOrCol = _rowOrColFromString(test);
-                const changed = game.processRowOrCol(rowOrCol);
+                const changed = game.processRowOrCol(rowOrCol, direction.Right);
                 const result = _rowOrColTotring(rowOrCol);
                 expect(result).to.equal(expected);
                 // changed should only be true when test differs from result

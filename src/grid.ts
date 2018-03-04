@@ -1,4 +1,5 @@
-import {Pos, Cell, CellOrNull} from './cell';
+import {Pos} from './pos';
+import {Cell, CellOrNull} from './cell';
 import {randomInt} from './helpers';
 
 export class Grid {
