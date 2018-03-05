@@ -18,4 +18,7 @@ export class Game {
     private newCellValue(): number {
         return randomInt(100) < 50 ? 2 : 4;
     }
+    private Won(): boolean {
+       return (this.grid.toArray().indexOf(2048) >= 0);
+    }
 }

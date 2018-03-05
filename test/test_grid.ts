@@ -183,4 +183,39 @@ describe('Grid', function() {
         });
     });
 
+    describe('canMakeMove', function() {
+        it('returns true when only shifting is possible', function() {
+            const test1 = [
+                4, 2, 4, 8,
+                8, 4, 2, 4,
+                2, 0, 4, 2,
+                4, 2, 8, 4
+            ];
+            grid.fromArray(test1);
+            const test = grid.canMakeMove();
+            expect(test).to.equal(true);
+        });
+        it('returns true when only merging is possible', function() {
+            const test2 = [
+                4, 2, 4, 8,
+                8, 4, 2, 4,
+                2, 8, 4, 2,
+                4, 2, 8, 2
+            ];
+            grid.fromArray(test2);
+            const test = grid.canMakeMove();
+            expect(test).to.equal(true);
+        });
+        it('returns false when neither shifting nor merging is possible', function() {
+            const test3 = [
+                4, 2, 4, 8,
+                8, 4, 2, 4,
+                2, 8, 4, 2,
+                4, 2, 8, 4
+            ];
+            grid.fromArray(test3);
+            const test = grid.canMakeMove();
+            expect(test).to.equal(false);
+        });
+    });
 });

@@ -123,6 +123,9 @@ export class Grid {
         } while (progress);
         return changes;
     }
+    public canMakeMove(): boolean {
+        return (this._canShiftCells() || this._canMergeCells());
+    }
     public makeMove(dir: direction): boolean {
         let changed = false;
         const vertical = (dir === direction.Down || dir === direction.Up);
@@ -210,5 +213,33 @@ export class Grid {
         cell.merged = true; // we can only merge once per move
         this._removeCell(other);
     }
-
+    private _isValidPosition(pos: Pos): boolean {
+        return (pos.x >= 0) &&
+               (pos.x < this.width) &&
+               (pos.y >= 0) &&
+               (pos.y < this.height);
+    }
+    private _canMergeCells(): boolean {
+        // check all cells
+        for (const cell of this.cells) {
+            if (cell) {
+                // check all directions
+                for (const dir of DIRECTIONS) {
+                    const otherPos = cell.pos.move(dir);
+                    if (this._isValidPosition(otherPos)) {
+                        const otherIdx = this._posToIndex(otherPos);
+                        const other = this.cells[otherIdx];
+                        if (cell.canMergeWith(other)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    private _canShiftCells(): boolean {
+        const empty = this.emptyPositions();
+        return empty.length > 0;
+    }
 }
