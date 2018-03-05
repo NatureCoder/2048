@@ -2,6 +2,9 @@ import 'mocha';
 import { expect } from 'chai';
 
 import { Grid } from '../src/grid';
+import { Cell, CellOrNull } from '../src/cell';
+import { Pos } from '../src/position';
+import { direction } from '../src/direction';
 
 describe('Grid', function() {
     const grid = new Grid(4);
@@ -58,5 +61,52 @@ describe('Grid', function() {
             const filled = grid.filledCells();
             expect(filled.length).to.equal(total);
         });
+    });
+
+    function _rowOrColFromNums(vals: fourNums): CellOrNull[] {
+        const rowOrCol = [];
+        for (const val of vals) {
+            const cell = val ? new Cell(val) : null;
+            rowOrCol.push(cell);
+        }
+        return rowOrCol;
+    }
+    function _rowOrColToNums(rowOrCol: CellOrNull[]): fourNums {
+        const result: fourNums = [0, 0, 0, 0];
+        for (const [idx, cell]  of rowOrCol.entries()) {
+            const val = cell ? cell.val : 0;
+            result[idx] = val;
+        }
+        return result;
+    }
+    type fourNums = [number, number, number, number];
+    type TestVal = [fourNums, fourNums];
+    const testVals: TestVal[] = [
+        [[2, 4, 4, 2], [0, 2, 8, 2]],
+        [[2, 0, 2, 2], [0, 0, 2, 4]],
+        [[2, 2, 4, 4], [0, 0, 4, 8]],
+        [[2, 2, 2, 2], [0, 0, 4, 4]],
+        [[2, 0, 0, 0], [0, 0, 0, 2]],
+        [[0, 0, 0, 0], [0, 0, 0, 0]],
+        [[2, 4, 2, 4], [2, 4, 2, 4]],
+        [[2, 0, 2, 4], [0, 0, 4, 4]],
+        [[0, 2, 0, 2], [0, 0, 0, 4]],
+        [[2, 0, 2, 0], [0, 0, 0, 4]],
+    ];
+    describe('processRowOrCol', function() {
+        for (const testval of testVals) {
+            const [test, expected] = testval;
+            const testdescr = 'input of "' + test  + '" should return "' + expected + '"';
+            it(testdescr, function() {
+                const rowOrCol = _rowOrColFromNums(test);
+                // TODO test other directions
+                const changed = grid.processRowOrCol(rowOrCol, direction.Right);
+                const result = _rowOrColToNums(rowOrCol);
+                expect(JSON.stringify(result)).to.equal(JSON.stringify(expected));
+                // changed should only be true when test differs from result
+                expect(changed).to.equal((JSON.stringify(test) !== JSON.stringify(result)));
+            });
+
+        }
     });
 });
