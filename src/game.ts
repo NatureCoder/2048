@@ -4,6 +4,7 @@ import {Direction, direction, DIRECTIONS} from './direction';
 import {Cell, CellOrNull} from './cell';
 import {randomInt} from './helpers';
 import { Renderer } from './renderer';
+import { InputHandler } from './inputhandler';
 
 const filledAtStart = 2;
 export type GridOrSize = Grid | number;
@@ -14,9 +15,9 @@ export interface IGameState {
     grid: IGridState;
 }
 export class Game {
-    public static fromState(state: IGameState, renderer: Renderer): Game {
+    public static fromState(state: IGameState, renderer?: Renderer, inputHandler?: InputHandler): Game {
         const grid = Grid.fromState(state.grid);
-        const game = new Game(grid, renderer);
+        const game = new Game(grid, renderer, inputHandler);
         game._won = state.won;
         game._done = state.done;
         game._score = state.score;
@@ -28,6 +29,7 @@ export class Game {
     private _done: boolean = false;
     private _score: number = 0;
     private _renderer?: Renderer;
+    private _inputHandler?: InputHandler;
     get won() {
         return this._won;
     }
@@ -38,13 +40,17 @@ export class Game {
         return this._score;
     }
 
-    constructor(gridOrSize: GridOrSize = 4, renderer?: Renderer) {
+    constructor(gridOrSize: GridOrSize = 4, renderer?: Renderer, inputHandler?: InputHandler) {
         if (gridOrSize instanceof Grid) {
              this.grid = gridOrSize;
         } else {
             this.grid = new Grid(gridOrSize);
         }
         this._renderer = renderer;
+        this._inputHandler = inputHandler;
+        if (this._inputHandler) {
+            this._inputHandler.on('move', this.makeMove.bind(this));
+        }
         this.reset();
     }
 
@@ -83,8 +89,10 @@ export class Game {
         return (this.grid.canShiftCells() || this.grid.canMergeCells());
     }
 
-    public makeMove(dir: direction): boolean {
+    public makeMove(dir: direction): void {
+        this.grid.prepareMove();
         let changed = false;
+
         const vertical = (dir === direction.Down || dir === direction.Up);
         if (vertical) {
             for (const col of this.grid.cols()) {
@@ -97,7 +105,16 @@ export class Game {
                 changed = changed || rowChanged;
             }
         }
-        return changed;
+        if (changed) {
+            this._won = this.hasWon();
+            this._done = !this.canMakeMove();
+            const pos = this.grid.randomEmptyPosition();
+            if (pos) {
+                const newVal = this.newCellValue();
+                this.grid.addCell(pos!, newVal);
+            }
+        }
+        this.render();
     }
 
     public processRowOrCol(rowOrCol: CellOrNull[], dir: direction): boolean {

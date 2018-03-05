@@ -69,7 +69,7 @@ export class Grid {
         let s = '';
         for (const row of this.rows()) {
             for (const cell of row) {
-                s = s + ' ' + (cell ? nf(cell.val, 4) : '    ');
+                s = s + ' ' + (cell ? nf(cell.val, 2) : '__');
             }
             s += '\n';
         }
