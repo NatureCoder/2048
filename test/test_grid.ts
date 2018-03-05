@@ -92,6 +92,7 @@ describe('Grid', function() {
         [[2, 0, 2, 4], [0, 0, 4, 4]],
         [[0, 2, 0, 2], [0, 0, 0, 4]],
         [[2, 0, 2, 0], [0, 0, 0, 4]],
+        [[8, 4, 0, 2], [0, 8, 4, 2]]
     ];
     describe('processRowOrCol', function() {
         for (const testval of testVals) {
@@ -99,7 +100,6 @@ describe('Grid', function() {
             const testdescr = 'input of "' + test  + '" should return "' + expected + '"';
             it(testdescr, function() {
                 const rowOrCol = _rowOrColFromNums(test);
-                // TODO test other directions
                 const changed = grid.processRowOrCol(rowOrCol, direction.Right);
                 const result = _rowOrColToNums(rowOrCol);
                 expect(JSON.stringify(result)).to.equal(JSON.stringify(expected));
@@ -109,4 +109,78 @@ describe('Grid', function() {
 
         }
     });
+    const testgrid = [
+        0, 2, 4, 8,
+        8, 4, 0, 2,
+        2, 4, 8, 2,
+        0, 2, 8, 8
+    ];
+    describe('fromArray toArray', function() {
+
+        it('should return the same values after toArray > fromArray', function() {
+            grid.fromArray(testgrid);
+            const test = grid.toArray();
+            expect(JSON.stringify(test)).to.equal(JSON.stringify(testgrid));
+        });
+    });
+    describe('makeMove up', function() {
+        it('should return the expected values when moving up', function() {
+            const expected = [
+                8, 2,  4, 8,     // 0, 2, 4, 8,
+                2, 8, 16, 4,     // 8, 4, 0, 2,
+                0, 2,  0, 8,     // 2, 4, 8, 2,
+                0, 0,  0, 0      // 0, 2, 8, 8
+            ];
+            grid.fromArray(testgrid);
+            grid.makeMove(direction.Up);
+            const test = grid.toArray();
+            expect(JSON.stringify(test)).to.equal(JSON.stringify(expected));
+        });
+    });
+    describe('makeMove right', function() {
+        it('should return the expected values when moving right', function() {
+            const expected = [
+                0, 2, 4, 8,     // 0, 2, 4, 8,
+                0, 8, 4, 2,     // 8, 4, 0, 2,
+                2, 4, 8, 2,     // 2, 4, 8, 2,
+                0, 0, 2, 16     // 0, 2, 8, 8
+
+            ];
+            grid.fromArray(testgrid);
+            grid.makeMove(direction.Right);
+            const test = grid.toArray();
+            expect(JSON.stringify(test)).to.equal(JSON.stringify(expected));
+        });
+    });
+    describe('makeMove down', function() {
+        it('should return the expected values when moving down', function() {
+            const expected = [
+                0, 0,  0, 0,    // 0, 2, 4, 8,
+                0, 2,  0, 8,    // 8, 4, 0, 2,
+                8, 8,  4, 4,    // 2, 4, 8, 2,
+                2, 2, 16, 8     // 0, 2, 8, 8
+
+            ];
+            grid.fromArray(testgrid);
+            grid.makeMove(direction.Down);
+            const test = grid.toArray();
+            expect(JSON.stringify(test)).to.equal(JSON.stringify(expected));
+        });
+    });
+    describe('makeMove left', function() {
+        it('should return the expected values when moving left', function() {
+            const expected = [
+                2, 4, 8, 0,     // 0, 2, 4, 8,
+                8, 4, 2, 0,     // 8, 4, 0, 2,
+                2, 4, 8, 2,     // 2, 4, 8, 2,
+                2, 16, 0, 0     // 0, 2, 8, 8
+
+            ];
+            grid.fromArray(testgrid);
+            grid.makeMove(direction.Left);
+            const test = grid.toArray();
+            expect(JSON.stringify(test)).to.equal(JSON.stringify(expected));
+        });
+    });
+
 });

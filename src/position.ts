@@ -8,6 +8,9 @@ export class Pos {
         this.y = y ? y : 0;
     }
     public move(dir: Direction) {
-        return new Pos(this.x + dir.x, this.y += dir.y);
+        return new Pos(this.x + dir.x, this.y + dir.y);
+    }
+    public toString() {
+        return `(${this.x}, ${this.y})`;
     }
 }

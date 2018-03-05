@@ -1,7 +1,7 @@
 import {Pos} from './position';
 import {Direction, direction, DIRECTIONS} from './direction';
 import {Cell, CellOrNull} from './cell';
-import {randomInt} from './helpers';
+import {randomInt, nf} from './helpers';
 
 export class Grid {
     public readonly width: number;
@@ -14,9 +14,38 @@ export class Grid {
         this.makeEmpty();
     }
     public makeEmpty(): void {
+        this.cells = [];
         for (let idx = 0; idx < this.width * this.height; idx++) {
             this.cells.push(null);
         }
+    }
+    public fromArray(vals: number[]): void {
+        if (vals.length !== this.width * this.height) {
+            throw Error("invalid array length");
+        }
+        this.makeEmpty();
+        for (const [idx, val] of vals.entries()) {
+            if (val > 0) {
+                this.addCell(this._indexToPos(idx), val);
+            }
+        }
+    }
+    public toArray(): number[] {
+        const vals = [];
+        for (const cell of this.cells) {
+            vals.push(cell ? cell.val : 0);
+        }
+        return vals;
+    }
+    public toString(): string {
+        let s = '';
+        for (const row of this.rows()) {
+            for (const cell of row) {
+                s = s + ' ' + (cell ? nf(cell.val, 4) : '    ');
+            }
+            s += '\n';
+        }
+        return s;
     }
     public addCell(pos: Pos, val: number): void {
         const cell = new Cell(val, pos);
@@ -86,14 +115,29 @@ export class Grid {
         if ((dir === direction.Up) || (dir === direction.Left)) {
             rowOrCol.reverse();
         }
-        const vector = DIRECTIONS[dir];
         let progress = false;
         let changes = false;
         do {
-            progress = this._shiftOrMerge(rowOrCol, vector);
+            progress = this._shiftOrMerge(rowOrCol, dir);
             changes = changes || progress;
         } while (progress);
         return changes;
+    }
+    public makeMove(dir: direction): boolean {
+        let changed = false;
+        const vertical = (dir === direction.Down || dir === direction.Up);
+        if (vertical) {
+            for (const col of this.cols()) {
+                const colChanged = this.processRowOrCol(col, dir);
+                changed = changed || colChanged;
+            }
+        } else {
+            for (const row of this.rows()) {
+                const rowChanged = this.processRowOrCol(row, dir);
+                changed = changed || rowChanged;
+            }
+        }
+        return changed;
     }
     private _xyToIndex(x: number, y: number): number {
         return y * this.width + x;
@@ -108,17 +152,18 @@ export class Grid {
         return p;
 
     }
-    private _shiftOrMerge(rowOrCol: CellOrNull[], d: Direction): boolean {
+    private _shiftOrMerge(rowOrCol: CellOrNull[], d: direction): boolean {
         let changed = false;
         let idx = rowOrCol.length - 1;
         while (idx > 0) {
             const curr = rowOrCol[idx];
             const next = rowOrCol[idx - 1];
             if (!curr) {
-                changed = changed || this._shiftCells(rowOrCol, idx, d);
+                const shifted = this._shiftCells(rowOrCol, idx, d);
+                changed = changed || shifted;
             } else if (curr.canMergeWith(next)) {
                 this._mergeCellWith(curr, next!);
-                rowOrCol[idx - 1] = null;
+                rowOrCol[idx - 1] = null; // updating rowOrCol is only for testing
                 changed = true;
             } else {
                 // keep at same pos, no progress
@@ -127,7 +172,7 @@ export class Grid {
         }
         return changed;
     }
-    private _shiftCells(rowOrCol: CellOrNull[], startIdx: number, d: Direction): boolean {
+    private _shiftCells(rowOrCol: CellOrNull[], startIdx: number, d: direction): boolean {
         let changed = false;
         let idx = startIdx;
         while (idx > 0) {
@@ -135,11 +180,11 @@ export class Grid {
             if (movingCell) {
                 this._moveCell(movingCell, d);
             }
-            rowOrCol[idx] = movingCell; // place cell at next positions
+            rowOrCol[idx] = movingCell; // updating rowOrCol is only for testing
             changed = changed || (movingCell !== null);
             idx--;
         }
-        rowOrCol[0] = null; // insert empty val in left most slot
+        rowOrCol[0] = null; // updating rowOrCol is only for testing
         return changed;
     }
     private _removeCell(cell: Cell): void {
@@ -147,12 +192,21 @@ export class Grid {
         const idx = this._posToIndex(pos);
         this.cells[idx] = null;
     }
-    private _moveCell(cell: Cell, d: Direction) {
-        const newpos = cell.pos.move(d);
+    private _moveCell(cell: Cell, dir: direction) {
+        // get direction vector
+        const vector = DIRECTIONS[dir];
+        // update cell
+        const oldpos = cell.pos;
+        const newpos = cell.pos.move(vector);
         cell.pos = newpos;
+        // update grid
+        const oldidx = this._posToIndex(oldpos);
+        this.cells[oldidx] = null;
+        const newidx = this._posToIndex(newpos);
+        this.cells[newidx] = cell;
     }
     private _mergeCellWith(cell: Cell, other: Cell): void {
-        cell.val = cell.val + other.val;
+        cell.val =  cell.val + other.val;
         cell.merged = true; // we can only merge once per move
         this._removeCell(other);
     }
