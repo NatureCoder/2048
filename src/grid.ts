@@ -16,7 +16,7 @@ export class Grid {
         const grid = new Grid(size);
         for (const [idx, val] of vals.entries()) {
             if (val > 0) {
-                grid.addCell(grid._indexToPos(idx), val);
+                grid.addCell(grid.indexToPos(idx), val);
             }
         }
         return grid;
@@ -78,7 +78,7 @@ export class Grid {
 
     public addCell(pos: Pos, val: number): void {
         const cell = new Cell(val, pos);
-        const idx = this._posToIndex(pos);
+        const idx = this.posToIndex(pos);
         this.cells[idx] = cell;
     }
 
@@ -87,14 +87,14 @@ export class Grid {
         for (let idx = 0; idx < this.size * this.size; idx++) {
             const cell = this.cells[idx];
             if (cell === null) {
-                empty.push(this._indexToPos(idx));
+                empty.push(this.indexToPos(idx));
             }
         }
         return empty;
     }
 
     public cellIsEmpty(pos: Pos) {
-        const idx = this._posToIndex(pos);
+        const idx = this.posToIndex(pos);
         return (this.cells[idx] !== null);
     }
 
@@ -113,7 +113,7 @@ export class Grid {
         for (let y = 0; y < this.size; y++) {
             const row: CellOrNull[] = [];
             for (let x = 0; x < this.size; x++) {
-                const idx = this._xyToIndex(x, y);
+                const idx = this.xyToIndex(x, y);
                 row.push(this.cells[idx]);
             }
             result.push(row);
@@ -126,7 +126,7 @@ export class Grid {
         for (let x = 0; x < this.size; x++) {
             const col: CellOrNull[] = [];
             for (let y = 0; y < this.size; y++) {
-                const idx = this._xyToIndex(x, y);
+                const idx = this.xyToIndex(x, y);
                 col.push(this.cells[idx]);
             }
             result.push(col);
@@ -155,7 +155,7 @@ export class Grid {
                 for (const dir of DIRECTIONS) {
                     const otherPos = cell.pos.move(dir);
                     if (this._isValidPosition(otherPos)) {
-                        const otherIdx = this._posToIndex(otherPos);
+                        const otherIdx = this.posToIndex(otherPos);
                         const other = this.cells[otherIdx];
                         if (cell.canMergeWith(other)) {
                             return true;
@@ -180,28 +180,28 @@ export class Grid {
         const newpos = cell.pos.move(vector);
         cell.pos = newpos;
         // update grid
-        const oldidx = this._posToIndex(oldpos);
+        const oldidx = this.posToIndex(oldpos);
         this.cells[oldidx] = null;
-        const newidx = this._posToIndex(newpos);
+        const newidx = this.posToIndex(newpos);
         this.cells[newidx] = cell;
     }
 
     public mergeCellWith(cell: Cell, other: Cell): number {
         cell.val =  cell.val + other.val;
         cell.merged = true; // we can only merge once per move
-        this._removeCell(other);
+        this.removeCell(other);
         return cell.val;
     }
 
-    private _xyToIndex(x: number, y: number): number {
+    private xyToIndex(x: number, y: number): number {
         return y * this.size + x;
     }
 
-    private _posToIndex(pos: Pos): number {
+    private posToIndex(pos: Pos): number {
         return pos.y * this.size + pos.x;
     }
 
-    private _indexToPos(idx: number): Pos {
+    private indexToPos(idx: number): Pos {
         const p = new Pos();
         p.y = Math.floor(idx / this.size);
         p.x = idx % this.size;
@@ -209,9 +209,9 @@ export class Grid {
 
     }
 
-    private _removeCell(cell: Cell): void {
+    private removeCell(cell: Cell): void {
         const pos = cell.pos;
-        const idx = this._posToIndex(pos);
+        const idx = this.posToIndex(pos);
         this.cells[idx] = null;
     }
 

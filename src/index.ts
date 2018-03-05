@@ -1,10 +1,12 @@
 import './styles.sass';
-import {Grid} from './grid';
-import {Game} from './game';
+import { Game } from './game';
+import { Renderer } from './renderer';
 
 document.addEventListener('DOMContentLoaded', function(ev: Event): void {
-    const grid = new Grid(4);
-    const game = new Game(grid);
-    game.start();
-    game.show();
+    const cntnr = document.getElementById('container');
+    if (cntnr) {
+        const renderer = new Renderer(cntnr);
+        const game = new Game(4, renderer);
+        game.start();
+    }
 });

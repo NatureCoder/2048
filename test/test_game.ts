@@ -21,7 +21,7 @@ describe('Game', function() {
         });
     });
 
-    function _rowOrColFromNums(vals: fourNums): CellOrNull[] {
+    function rowOrColFromNums(vals: fourNums): CellOrNull[] {
         const rowOrCol = [];
         for (const val of vals) {
             const cell = val ? new Cell(val) : null;
@@ -29,7 +29,7 @@ describe('Game', function() {
         }
         return rowOrCol;
     }
-    function _rowOrColToNums(rowOrCol: CellOrNull[]): fourNums {
+    function rowOrColToNums(rowOrCol: CellOrNull[]): fourNums {
         const result: fourNums = [0, 0, 0, 0];
         for (const [idx, cell]  of rowOrCol.entries()) {
             const val = cell ? cell.val : 0;
@@ -57,9 +57,9 @@ describe('Game', function() {
             const [test, expected] = testval;
             const testdescr = 'input of "' + test  + '" should return "' + expected + '"';
             it(testdescr, function() {
-                const rowOrCol = _rowOrColFromNums(test);
+                const rowOrCol = rowOrColFromNums(test);
                 const changed = game.processRowOrCol(rowOrCol, direction.Right);
-                const result = _rowOrColToNums(rowOrCol);
+                const result = rowOrColToNums(rowOrCol);
                 expect(JSON.stringify(result)).to.equal(JSON.stringify(expected));
                 // changed should only be true when test differs from result
                 expect(changed).to.equal((JSON.stringify(test) !== JSON.stringify(result)));

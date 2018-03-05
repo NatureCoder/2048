@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome",
+            "url": "http://127.0.0.1:8080",
+            "webRoot": "${workspaceFolder}/src"
+        },
+        {
             "type": "node",
             "request": "launch",
             "name": "test with mocha",

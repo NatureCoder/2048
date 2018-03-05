@@ -3,9 +3,10 @@ import {Grid, IGridState} from './grid';
 import {Direction, direction, DIRECTIONS} from './direction';
 import {Cell, CellOrNull} from './cell';
 import {randomInt} from './helpers';
+import { Renderer } from './renderer';
 
 const filledAtStart = 2;
-
+export type GridOrSize = Grid | number;
 export interface IGameState {
     won: boolean;
     done: boolean;
@@ -13,9 +14,9 @@ export interface IGameState {
     grid: IGridState;
 }
 export class Game {
-    public static fromState(state: IGameState): Game {
+    public static fromState(state: IGameState, renderer: Renderer): Game {
         const grid = Grid.fromState(state.grid);
-        const game = new Game(grid);
+        const game = new Game(grid, renderer);
         game._won = state.won;
         game._done = state.done;
         game._score = state.score;
@@ -26,6 +27,7 @@ export class Game {
     private _won: boolean = false;
     private _done: boolean = false;
     private _score: number = 0;
+    private _renderer?: Renderer;
     get won() {
         return this._won;
     }
@@ -36,8 +38,13 @@ export class Game {
         return this._score;
     }
 
-    constructor(grid?: Grid, size: number = 4) {
-        this.grid = grid ? grid : new Grid(size);
+    constructor(gridOrSize: GridOrSize = 4, renderer?: Renderer) {
+        if (gridOrSize instanceof Grid) {
+             this.grid = gridOrSize;
+        } else {
+            this.grid = new Grid(gridOrSize);
+        }
+        this._renderer = renderer;
         this.reset();
     }
 
@@ -52,6 +59,7 @@ export class Game {
             const pos = this.grid.randomEmptyPosition();
             this.grid.addCell(pos!, this.newCellValue());
         }
+        this.render();
     }
 
     public toState(): IGameState {
@@ -100,20 +108,20 @@ export class Game {
         let progress = false;
         let changed = false;
         do {
-            progress = this._shiftOrMerge(rowOrCol, dir);
+            progress = this.shiftOrMerge(rowOrCol, dir);
             changed = changed || progress;
         } while (progress);
         return changed;
     }
 
-    private _shiftOrMerge(rowOrCol: CellOrNull[], d: direction): boolean {
+    private shiftOrMerge(rowOrCol: CellOrNull[], d: direction): boolean {
         let changed = false;
         let idx = rowOrCol.length - 1;
         while (idx > 0) {
             const curr = rowOrCol[idx];
             const next = rowOrCol[idx - 1];
             if (!curr) {
-                const shifted = this._shiftCells(rowOrCol, idx, d);
+                const shifted = this.shiftCells(rowOrCol, idx, d);
                 changed = changed || shifted;
             } else if (curr.canMergeWith(next)) {
                 this._score += this.grid.mergeCellWith(curr, next!);
@@ -127,7 +135,7 @@ export class Game {
         return changed;
     }
 
-    private _shiftCells(rowOrCol: CellOrNull[], startIdx: number, d: direction): boolean {
+    private shiftCells(rowOrCol: CellOrNull[], startIdx: number, d: direction): boolean {
         let moved = false;
         let idx = startIdx;
         while (idx > 0) {
@@ -141,5 +149,11 @@ export class Game {
         }
         rowOrCol[0] = null; // updating rowOrCol is only for testing
         return moved;
+    }
+
+    private render() {
+        if (this._renderer) {
+            this._renderer.render(this.toState());
+        }
     }
 }
