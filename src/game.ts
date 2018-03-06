@@ -1,9 +1,8 @@
-import {Pos} from './position';
-import {Grid, IGridState} from './grid';
-import {Direction, direction, DIRECTIONS} from './direction';
-import {Cell, CellOrNull} from './cell';
-import {randomInt} from './helpers';
-import { Renderer } from './renderer';
+import { Pos } from './position';
+import { Grid, IGridState } from './grid';
+import { Direction, direction, DIRECTIONS } from './direction';
+import { Cell, CellOrNull } from './cell';
+import { randomInt } from './helpers';
 import { InputHandler } from './inputhandler';
 
 const filledAtStart = 2;
@@ -14,8 +13,13 @@ export interface IGameState {
     score: number;
     grid: IGridState;
 }
+
+export interface IRenderer {
+    render(state: IGameState): void;
+}
+
 export class Game {
-    public static fromState(state: IGameState, renderer?: Renderer, inputHandler?: InputHandler): Game {
+    public static fromState(state: IGameState, renderer?: IRenderer, inputHandler?: InputHandler): Game {
         const grid = Grid.fromState(state.grid);
         const game = new Game(grid, renderer, inputHandler);
         game._won = state.won;
@@ -28,7 +32,7 @@ export class Game {
     private _won: boolean = false;
     private _done: boolean = false;
     private _score: number = 0;
-    private _renderer?: Renderer;
+    private _renderer?: IRenderer;
     private _inputHandler?: InputHandler;
     get won() {
         return this._won;
@@ -40,7 +44,7 @@ export class Game {
         return this._score;
     }
 
-    constructor(gridOrSize: GridOrSize = 4, renderer?: Renderer, inputHandler?: InputHandler) {
+    constructor(gridOrSize: GridOrSize = 4, renderer?: IRenderer, inputHandler?: InputHandler) {
         if (gridOrSize instanceof Grid) {
              this.grid = gridOrSize;
         } else {
@@ -63,7 +67,9 @@ export class Game {
     public start(): void {
         for (let i = 0; i < filledAtStart; i++) {
             const pos = this.grid.randomEmptyPosition();
-            this.grid.addCell(pos!, this.newCellValue());
+            if (pos) {
+                this.grid.addCell(pos, this.newCellValue());
+            }
         }
         this.render();
     }

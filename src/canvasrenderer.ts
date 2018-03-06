@@ -1,6 +1,6 @@
-import { IGameState } from "./game";
+import { IGameState, IRenderer} from "./game";
 
-export class Renderer {
+export class CanvasRenderer implements IRenderer {
     private container: HTMLElement;
     private canvas: HTMLCanvasElement;
 
@@ -13,7 +13,7 @@ export class Renderer {
         this.container.appendChild(this.canvas);
     }
 
-    public render(state: IGameState) {
+    public render(state: IGameState): void {
 
         function clearBackground(ctx: CanvasRenderingContext2D, w: number, h: number) {
             ctx.fillStyle = 'dimgray';

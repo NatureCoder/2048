@@ -1,19 +1,19 @@
 /*  2048 animation effect */
 body {
-	background: #ddd;
-	margin: 0;
-	padding: 0;
-	--fontsize: 20px;
-	--cellsize: 90px;
+    background: #ddd;
+    margin: 0;
+    padding: 0;
+    --fontsize: 20px;
+    --cellsize: 90px;
     --cellmargin: 5px;
     --borderwidth: 5px;
-	--duration: 0.3s;
+    --duration: 0.3s;
 }
 .grid {
- 	margin: 20px;
-	display: block;;
-	position: relative;
-	border: 1px solid #333;
+     margin: 20px;
+    display: block;
+    position: relative;
+    border: 1px solid #333;
     font-size: 0;
     width: calc((var(--cellsize) * 4) + (var(--cellmargin)) * 5);
     height: calc((var(--cellsize) * 4) + (var(--cellmargin)) * 5);
@@ -27,36 +27,36 @@ body {
     width: calc((var(--cellsize) + var(--cellmargin)) * 1);
     height: calc((var(--cellsize) + var(--cellmargin)) * 1);
     transition-duration: var(--duration);
-	transition-property: left;
-	transition-timing-function: ease-in;
+    transition-property: left;
+    transition-timing-function: ease-in;
 }
 .tile {
-	width: var(--cellsize);
-	height: var(--cellsize);
-	background: pink;
-	margin: var(--cellmargin);
-	margin-right: 0px;
-	border: var(--borderwidth) solid red;
-	color: red;
-	text-align: center;
-	line-height: calc(var(--cellsize) - var(--borderwidth));
-	font-family: Arial;
-	font-size: var(--fontsize);
-	font-weight: normal;
-	display: inline-block;
+    width: var(--cellsize);
+    height: var(--cellsize);
+    background: pink;
+    margin: var(--cellmargin);
+    margin-right: 0px;
+    border: var(--borderwidth) solid red;
+    color: red;
+    text-align: center;
+    line-height: calc(var(--cellsize) - var(--borderwidth));
+    font-family: Arial;
+    font-size: var(--fontsize);
+    font-weight: normal;
+    display: inline-block;
     position: absolute;
-	user-select: none;
-	box-sizing: border-box;
-	transition-duration: var(--duration);
-	transition-property: transform box-shadow;
-	transition-timing-function: ease-in;
+    user-select: none;
+    box-sizing: border-box;
+    transition-duration: var(--duration);
+    transition-property: transform box-shadow;
+    transition-timing-function: ease-in;
     border-radius: 20px;
 }
 
 /*  initial positions */
 
 .cell:last-child {
-  	margin-right: var(--cellmargin);
+      margin-right: var(--cellmargin);
 }
 .cell:nth-child(1) {
     left: 0;
@@ -86,21 +86,21 @@ body {
 }
 .front, .back {
     /* hide back of pane during swap */
-	backface-visibility: hidden;
-	position: absolute;
-	top: 0;
+    backface-visibility: hidden;
+    position: absolute;
+    top: 0;
     left: 0;
     width: 100%;
     height: 100%;
 }
 .front {
     /* front pane, placed above back */
-	z-index: 2;
-	transform: rotateY(0deg);
+    z-index: 2;
+    transform: rotateY(0deg);
 }
 .back {
     /* back, initially hidden pane */
-	transform: rotateY(180deg);
+    transform: rotateY(180deg);
 }
 
 /*  animation effect */
@@ -115,8 +115,7 @@ body {
     transform: rotateY(-180deg);
     box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.7);
 }
-.grid:hover .appear{
+.grid:hover .appear {
     opacity: 1;
     transform: scale(1.0);
-    width: 
 }
