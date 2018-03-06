@@ -148,19 +148,18 @@ export class Grid {
     }
 
     public canMergeCells(): boolean {
-        // check all cells
-        for (const cell of this.cells) {
-            if (cell) {
-                // check all directions
-                for (const dir of DIRECTIONS) {
-                    const otherPos = cell.pos.move(dir);
-                    if (this._isValidPosition(otherPos)) {
-                        const otherIdx = this.posToIndex(otherPos);
-                        const other = this.cells[otherIdx];
-                        if (cell.canMergeWith(other)) {
+        for (let x = 0; x < this.size; x++) {
+            for (let y = 0; y < this.size; y++) {
+                const idx = this.xyToIndex(x, y);
+                const right = x < this.size - 1 ? this.xyToIndex(x + 1, y) : null;
+                const below = y < this.size - 1 ? this.xyToIndex(x, y + 1) : null;
+                const cell = this.cells[idx];
+                if (cell) {
+                    // only need to check to the right and below:
+                    if ((right && cell.canMergeWith(this.cells[right])) ||
+                        (below && cell.canMergeWith(this.cells[below]))) {
                             return true;
                         }
-                    }
                 }
             }
         }
@@ -213,12 +212,5 @@ export class Grid {
         const pos = cell.pos;
         const idx = this.posToIndex(pos);
         this.cells[idx] = null;
-    }
-
-    private _isValidPosition(pos: Pos): boolean {
-        return (pos.x >= 0) &&
-               (pos.x < this.size) &&
-               (pos.y >= 0) &&
-               (pos.y < this.size);
     }
 }
