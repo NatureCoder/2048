@@ -106,13 +106,13 @@ export class Game {
             }
         }
         if (changed) {
-            this._won = this.hasWon();
-            this._done = !this.canMakeMove();
             const pos = this.grid.randomEmptyPosition();
             if (pos) {
                 const newVal = this.newCellValue();
                 this.grid.addCell(pos!, newVal);
             }
+            this._won = this.hasWon();
+            this._done = !this.canMakeMove();
         }
         this.render();
     }
