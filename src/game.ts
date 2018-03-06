@@ -49,7 +49,7 @@ export class Game {
         this._renderer = renderer;
         this._inputHandler = inputHandler;
         if (this._inputHandler) {
-            this._inputHandler.on('move', this.makeMove.bind(this));
+            this._inputHandler.on('move', this.playMove.bind(this));
         }
         this.reset();
     }
@@ -89,7 +89,7 @@ export class Game {
         return (this.grid.canShiftCells() || this.grid.canMergeCells());
     }
 
-    public makeMove(dir: direction): void {
+    public makeMove(dir: direction): boolean {
         this.grid.prepareMove();
         let changed = false;
 
@@ -105,6 +105,11 @@ export class Game {
                 changed = changed || rowChanged;
             }
         }
+        return changed;
+    }
+
+    public playMove(dir: direction): void {
+        const changed = this.makeMove(dir);
         if (changed) {
             const pos = this.grid.randomEmptyPosition();
             if (pos) {
@@ -112,7 +117,7 @@ export class Game {
                 this.grid.addCell(pos!, newVal);
             }
             this._won = this.hasWon();
-            this._done = !this.canMakeMove();
+            this._done = this._won || !this.canMakeMove();
         }
         this.render();
     }

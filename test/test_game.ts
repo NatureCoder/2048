@@ -49,8 +49,6 @@ describe('Game', function() {
         [[2, 4, 2, 4], [2, 4, 2, 4]],
         [[2, 0, 2, 4], [0, 0, 4, 4]],
         [[0, 2, 0, 2], [0, 0, 0, 4]],
-        [[2, 0, 2, 0], [0, 0, 0, 4]],
-        [[8, 4, 0, 2], [0, 8, 4, 2]]
     ];
     describe('processRowOrCol', function() {
         for (const testval of testVals) {
@@ -136,7 +134,6 @@ describe('Game', function() {
             expect(JSON.stringify(test)).to.equal(JSON.stringify(expected));
         });
     });
-
     describe('canMakeMove', function() {
         it('returns true when only shifting is possible', function() {
             const test1 = [
@@ -173,6 +170,36 @@ describe('Game', function() {
             const testGame = new Game(gr);
             const test = testGame.canMakeMove();
             expect(test).to.equal(false);
+        });
+        describe('playMove', function() {
+            it('sets done=true & won=false when no more moves possible after adding last number', function() {
+                const test1 = [
+                     32,   64,   4,   16,
+                    128,  512,  64,    2,
+                      2,    8,  64,  256,
+                      4,  128,   8, 1024
+                ];
+                const gr = Grid.fromArray(test1);
+                const testGame = new Game(gr);
+                testGame.playMove(direction.Down);
+                const test = testGame.toState();
+                expect(test.done).to.equal(true);
+                expect(test.won).to.equal(false);
+            });
+            it('sets done=true & won=true when 2048 is reached after a move', function() {
+                const test1 = [
+                     32,   64,     4,   16,
+                    128,    0,  1024,    2,
+                      2,    8,  1024,  256,
+                      4,  128,     8, 1024
+                ];
+                const gr = Grid.fromArray(test1);
+                const testGame = new Game(gr);
+                testGame.playMove(direction.Down);
+                const test = testGame.toState();
+                expect(test.done).to.equal(true);
+                expect(test.won).to.equal(true);
+            });
         });
     });
 });
