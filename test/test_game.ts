@@ -40,15 +40,16 @@ describe('Game', function() {
     type fourNums = [number, number, number, number];
     type TestVal = [fourNums, fourNums];
     const testVals: TestVal[] = [
+        [[2, 0, 0, 0], [0, 0, 0, 2]],
         [[2, 4, 4, 2], [0, 2, 8, 2]],
         [[2, 0, 2, 2], [0, 0, 2, 4]],
         [[2, 2, 4, 4], [0, 0, 4, 8]],
         [[2, 2, 2, 2], [0, 0, 4, 4]],
-        [[2, 0, 0, 0], [0, 0, 0, 2]],
         [[0, 0, 0, 0], [0, 0, 0, 0]],
         [[2, 4, 2, 4], [2, 4, 2, 4]],
         [[2, 0, 2, 4], [0, 0, 4, 4]],
         [[0, 2, 0, 2], [0, 0, 0, 4]],
+        [[2, 2, 0, 0], [0, 0, 0, 4]],
     ];
     describe('processRowOrCol', function() {
         for (const testval of testVals) {

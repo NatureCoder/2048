@@ -127,47 +127,55 @@ export class Game {
         if ((dir === direction.Up) || (dir === direction.Left)) {
             rowOrCol.reverse();
         }
-        let progress = false;
-        let changed = false;
-        do {
-            progress = this.shiftOrMerge(rowOrCol, dir);
-            changed = changed || progress;
-        } while (progress);
-        return changed;
+        let slided = this.defragRowOrCol(rowOrCol, dir);
+        const merged = this.mergeCells(rowOrCol);
+        if (merged) {
+            slided = this.defragRowOrCol(rowOrCol, dir) || slided;
+        }
+        return merged || slided;
     }
 
-    private shiftOrMerge(rowOrCol: CellOrNull[], d: direction): boolean {
-        let changed = false;
+    private mergeCells(rowOrCol: CellOrNull[]): boolean {
+        let merged = false;
         let idx = rowOrCol.length - 1;
         while (idx > 0) {
             const curr = rowOrCol[idx];
             const next = rowOrCol[idx - 1];
-            if (!curr) {
-                const shifted = this.shiftCells(rowOrCol, idx, d);
-                changed = changed || shifted;
-            } else if (curr.canMergeWith(next)) {
+            if (curr && curr.canMergeWith(next)) {
                 this._score += this.grid.mergeCellWith(curr, next!);
-                rowOrCol[idx - 1] = null; // updating rowOrCol is only for testing
-                changed = true;
-            } else {
-                // keep at same pos, no progress
+                rowOrCol[idx - 1] = null; // updating rowOrCol is only for testing purposes
+                merged = true;
             }
             idx--;
         }
+        return merged;
+    }
+    private defragRowOrCol(rowOrCol: CellOrNull[], d: direction): boolean {
+        let changed = false;
+        let idx = rowOrCol.length - 1;
+        while (idx > 0) {
+            const cell = rowOrCol[idx];
+            let slided;
+            if (!cell) {
+                slided = this.slideAllCellsOverOnce(rowOrCol, idx, d);
+                changed = changed || slided;
+            }
+            // when nothing has changed, check next position
+            if (cell || !slided) {
+                idx--;
+            }
+        }
         return changed;
     }
-
-    private shiftCells(rowOrCol: CellOrNull[], startIdx: number, d: direction): boolean {
+    private slideAllCellsOverOnce(rowOrCol: CellOrNull[], startIdx: number, d: direction): boolean {
         let moved = false;
-        let idx = startIdx;
-        while (idx > 0) {
-            const movingCell = rowOrCol[idx - 1];
-            if (movingCell) {
-                this.grid.moveCell(movingCell, d);
+        for (let idx = startIdx; idx > 0; idx--) {
+            const nextCell = rowOrCol[idx - 1];
+            if (nextCell) {
+                this.grid.moveCell(nextCell, d);
+                moved = true;
             }
-            rowOrCol[idx] = movingCell; // updating rowOrCol is only for testing
-            moved = moved || (movingCell !== null);
-            idx--;
+            rowOrCol[idx] = nextCell; // updating rowOrCol is only for testing purposes
         }
         rowOrCol[0] = null; // updating rowOrCol is only for testing
         return moved;
