@@ -3,13 +3,15 @@ import { IGameState, IRenderer} from "./game";
 export class HTMLRenderer implements IRenderer {
     private container: HTMLElement;
 
-    constructor(container: HTMLElement) {
+    constructor(container: HTMLElement, gridsize: number) {
         this.container = container;
         this.container.innerHTML = '';
+        this.setGridSizeCSS(gridsize);
     }
 
     public render(state: IGameState): void {
         window.requestAnimationFrame(() => {
+
             this.container.innerHTML = '';
 
             const grid = document.createElement('div');
@@ -46,5 +48,11 @@ export class HTMLRenderer implements IRenderer {
     private valueToClassName(val: number, front: boolean = true): string {
         const exponent = Math.log2(val);
         return `val-${exponent}`;
+    }
+    private setGridSizeCSS(gridsize: number) {
+        const root = document.querySelector('html');
+        if (root) {
+            root.style.setProperty('--gridsize', gridsize.toString());
+        }
     }
 }

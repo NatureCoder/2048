@@ -3,9 +3,10 @@ $cellsize: 90px
 $cellmargin: 5px
 $borderwidth: 5px
 $duration: 0.3s
-$gs: 4
 $expmax: 11
 
+html
+    --gridsize: 4 // max 16
 body
     color: #eee
     background: #222
@@ -16,8 +17,8 @@ body
     margin: 20px
     position: relative
     border: 2px solid rgba(255, 255, 255, 0.3)
-    width: ($gs * $cellsize) + ($gs + 1) * $cellmargin
-    height: ($gs * $cellsize) + ($gs + 1) * $cellmargin
+    width: calc((var(--gridsize) * #{$cellsize}) + (var(--gridsize) + 1) * #{$cellmargin})
+    height: calc((var(--gridsize) * #{$cellsize}) + (var(--gridsize) + 1) * #{$cellmargin})
 
 .cell
     perspective-origin: center center
@@ -63,11 +64,11 @@ body
     /* back, initially hidden pane */
     transform: rotateY(180deg)
 
-@for $i from 0 through $gs - 1
+@for $i from 0 through 16 - 1
     .x-#{$i}
         left: ($cellsize + $cellmargin) * $i
 
-@for $i from 0 through $gs - 1
+@for $i from 0 through 16 - 1
     .y-#{$i}
         top: ($cellsize + $cellmargin) * $i
 
