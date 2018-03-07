@@ -28,6 +28,9 @@ body
     left: 0
     width: $cellsize + $cellmargin
     height: $cellsize + $cellmargin
+    transition-duration: $duration
+    transition-property: left top
+    transition-timing-function: ease-in
 
 .tile
     width: $cellsize
@@ -36,6 +39,10 @@ body
     margin-right: 0
     position: absolute
     background: none
+    transform-style: preserve-3d
+    transition-duration: $duration
+    transition-property: transform box-shadow opacity
+    transition-timing-function: ease-in
 
 .front, .back
     /* hide back of pane during swap */
@@ -62,7 +69,7 @@ body
 
 .back
     /* back, initially hidden pane */
-    transform: rotateY(180deg)
+    //
 
 @for $i from 0 through 16 - 1
     .x-#{$i}
@@ -81,3 +88,36 @@ $startcol: #AFEEEE
         border-color: darken($col, 30%)
         color: darken($col, 50%)
         font-size: 60px - ($i * 3)
+
+// animations
+.willflip-Up
+    transform: rotateX(180deg)
+.willflip-Down
+    transform: rotateX(-180deg)
+.willflip-Left
+    transform: rotateY(-180deg)
+.willflip-Right
+    transform: rotateY(180deg)
+
+.flipped-Up
+    transform: rotateX(-180deg)
+.flipped-Down
+    transform: rotateX(180deg)
+.flipped-Left
+    transform: rotateY(180deg)
+.flipped-Right
+    transform: rotateY(-180deg)
+
+.flipped-Up, .flipped-Down, .flipped-Left, .flipped-Right
+    box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.7)
+
+.moveunder
+    z-index: -1
+
+.willappear, .disappeared
+    opacity: 0
+    transform: scale(0.3)
+.appeared
+    opacity: 1
+    transform: scale(1.0)
+

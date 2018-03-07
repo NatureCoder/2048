@@ -172,35 +172,35 @@ describe('Game', function() {
             const test = testGame.canMakeMove();
             expect(test).to.equal(false);
         });
-        describe('playMove', function() {
-            it('sets done=true & won=false when no more moves possible after adding last number', function() {
-                const test1 = [
-                     32,   64,   4,   16,
-                    128,  512,  64,    2,
-                      2,    8,  64,  256,
-                      4,  128,   8, 1024
-                ];
-                const gr = Grid.fromArray(test1);
-                const testGame = new Game(gr);
-                testGame.playMove(direction.Down);
-                const test = testGame.toState();
-                expect(test.done).to.equal(true);
-                expect(test.won).to.equal(false);
-            });
-            it('sets done=true & won=true when 2048 is reached after a move', function() {
-                const test1 = [
-                     32,   64,     4,   16,
-                    128,    0,  1024,    2,
-                      2,    8,  1024,  256,
-                      4,  128,     8, 1024
-                ];
-                const gr = Grid.fromArray(test1);
-                const testGame = new Game(gr);
-                testGame.playMove(direction.Down);
-                const test = testGame.toState();
-                expect(test.done).to.equal(true);
-                expect(test.won).to.equal(true);
-            });
+    });
+    describe('playMove', function() {
+        it('sets done=true & won=false when no more moves possible after adding last number', function() {
+            const test1 = [
+                 32,   64,   8,   16,
+                128,  512,  64,    2,
+                  2,    8,  64,  256,
+                  4,  128,   8, 1024
+            ];
+            const gr = Grid.fromArray(test1);
+            const testGame = new Game(gr);
+            testGame.playMove(direction.Down);
+            const test = testGame.toState();
+            expect(test.done).to.equal(true);
+            expect(test.won).to.equal(false);
+        });
+        it('sets done=true & won=true when 2048 is reached after a move', function() {
+            const test1 = [
+                 32,   64,     4,   16,
+                128,    0,  1024,    2,
+                  2,    8,  1024,  256,
+                  4,  128,     8, 1024
+            ];
+            const gr = Grid.fromArray(test1);
+            const testGame = new Game(gr);
+            testGame.playMove(direction.Down);
+            const test = testGame.toState();
+            expect(test.done).to.equal(true);
+            expect(test.won).to.equal(true);
         });
     });
 });

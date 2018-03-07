@@ -9,7 +9,7 @@ import { Grid } from './grid';
 document.addEventListener('DOMContentLoaded', function(ev: Event): void {
     const cntnr = document.getElementById('container');
     if (cntnr) {
-        const gridsize = 6;
+        const gridsize = 4;
         // const renderer = new ConsoleRenderer();
         // const renderer = new CanvasRenderer(cntnr);
         const renderer = new HTMLRenderer(cntnr, gridsize);
@@ -19,6 +19,12 @@ document.addEventListener('DOMContentLoaded', function(ev: Event): void {
         //    128,  512,  64,    2,
         //      2,    8,  64,  256,
         //      4,  128,   8, 1024
+        // ];
+        // const testvals = [
+        // 2, 2, 0, 0,
+        // 2, 2, 0, 0,
+        // 0, 0, 0, 0,
+        // 0, 0, 0, 0
         // ];
         // const grid = Grid.fromArray(testvals, 4);
         // const game = new Game(grid, renderer, inputHandler);

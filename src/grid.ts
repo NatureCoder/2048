@@ -6,6 +6,8 @@ import { randomInt, nf } from './helpers';
 export interface IGridState {
     size: number;
     cells: ICellState[]; // contains only filled cells
+    // these are only for displaying purposes:
+    removedCells: ICellState[]; // cells that are removed in last move
 }
 
 export class Grid {
@@ -34,32 +36,39 @@ export class Grid {
     get size() {
         return this._size;
     }
-    private cells: CellOrNull[] = [];
+    private _cells: CellOrNull[] = [];
+    private _removedCells: Cell[] = [];
 
     constructor(size: number) {
         this._size = size;
-        this.cells = [];
+        this._cells = [];
+        this._removedCells = [];
         for (let idx = 0; idx < this.size * this.size; idx++) {
-            this.cells.push(null);
+            this._cells.push(null);
         }
     }
 
     public toState(): IGridState {
         const cellStates: ICellState[] = [];
-        this.cells.forEach((cell) => {
+        const removedStates: ICellState[]  = [];
+        this._cells.forEach((cell) => {
             if (cell) {
                 cellStates.push(cell.toState());
             }
         });
+        this._removedCells.forEach((cell) => {
+            removedStates.push(cell.toState());
+        });
         return {
             size: this.size,
-            cells: cellStates
+            cells: cellStates,
+            removedCells: removedStates
         };
     }
 
     public toArray(): number[] {
         const vals = [];
-        for (const cell of this.cells) {
+        for (const cell of this._cells) {
             vals.push(cell ? cell.val : 0);
         }
         return vals;
@@ -79,13 +88,13 @@ export class Grid {
     public addCell(pos: Pos, val: number): void {
         const cell = new Cell(val, pos);
         const idx = this.posToIndex(pos);
-        this.cells[idx] = cell;
+        this._cells[idx] = cell;
     }
 
     public emptyPositions(): Pos[] {
         const empty: Pos[] = [];
         for (let idx = 0; idx < this.size * this.size; idx++) {
-            const cell = this.cells[idx];
+            const cell = this._cells[idx];
             if (cell === null) {
                 empty.push(this.indexToPos(idx));
             }
@@ -95,12 +104,12 @@ export class Grid {
 
     public cellIsEmpty(pos: Pos) {
         const idx = this.posToIndex(pos);
-        return (this.cells[idx] !== null);
+        return (this._cells[idx] !== null);
     }
 
     public filledCells(): Cell[] {
         const filled: Cell[] = [];
-        this.cells.forEach((cell) => {
+        this._cells.forEach((cell) => {
             if (cell) {
                 filled.push(cell);
             }
@@ -114,7 +123,7 @@ export class Grid {
             const row: CellOrNull[] = [];
             for (let x = 0; x < this.size; x++) {
                 const idx = this.xyToIndex(x, y);
-                row.push(this.cells[idx]);
+                row.push(this._cells[idx]);
             }
             result.push(row);
         }
@@ -127,7 +136,7 @@ export class Grid {
             const col: CellOrNull[] = [];
             for (let y = 0; y < this.size; y++) {
                 const idx = this.xyToIndex(x, y);
-                col.push(this.cells[idx]);
+                col.push(this._cells[idx]);
             }
             result.push(col);
         }
@@ -141,6 +150,7 @@ export class Grid {
     }
 
     public prepareMove(): void {
+        this._removedCells = []; // reset
         const cells = this.filledCells();
         for (const cell of cells) {
             cell.prepareMove();
@@ -153,11 +163,11 @@ export class Grid {
                 const idx = this.xyToIndex(x, y);
                 const right = x < this.size - 1 ? this.xyToIndex(x + 1, y) : null;
                 const below = y < this.size - 1 ? this.xyToIndex(x, y + 1) : null;
-                const cell = this.cells[idx];
+                const cell = this._cells[idx];
                 if (cell) {
                     // only need to check to the right and below:
-                    if ((right && cell.canMergeWith(this.cells[right])) ||
-                        (below && cell.canMergeWith(this.cells[below]))) {
+                    if ((right && cell.canMergeWith(this._cells[right])) ||
+                        (below && cell.canMergeWith(this._cells[below]))) {
                             return true;
                         }
                 }
@@ -180,15 +190,16 @@ export class Grid {
         cell.pos = newpos;
         // update grid
         const oldidx = this.posToIndex(oldpos);
-        this.cells[oldidx] = null;
+        this._cells[oldidx] = null;
         const newidx = this.posToIndex(newpos);
-        this.cells[newidx] = cell;
+        this._cells[newidx] = cell;
     }
 
-    public mergeCellWith(cell: Cell, other: Cell): number {
+    public mergeCellWith(cell: Cell, other: Cell, dir: direction): number {
         cell.val =  cell.val + other.val;
-        cell.merged = true; // we can only merge once per move
-        this.removeCell(other);
+        cell.setMergeDir(dir);
+        const newPos = cell.pos.copy();
+        this.removeCell(other, newPos);
         return cell.val;
     }
 
@@ -208,9 +219,14 @@ export class Grid {
 
     }
 
-    private removeCell(cell: Cell): void {
-        const pos = cell.pos;
-        const idx = this.posToIndex(pos);
-        this.cells[idx] = null;
+    private removeCell(cell: Cell, newPos: Pos): void {
+        // set new position for removed cell
+        const oldPpos = cell.pos;
+        cell.pos = newPos;
+        // keep the removed cell (for displaying purposes)
+        this._removedCells.push(cell);
+        // update grid
+        const idx = this.posToIndex(oldPpos);
+        this._cells[idx] = null;
     }
 }

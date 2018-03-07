@@ -13,4 +13,7 @@ export class Pos {
     public toString() {
         return `(${this.x}, ${this.y})`;
     }
+    public copy(): Pos {
+        return new Pos(this.x, this.y);
+    }
 }

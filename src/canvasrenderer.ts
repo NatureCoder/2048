@@ -1,4 +1,4 @@
-import { IGameState, IRenderer} from "./game";
+import { IGameState, IRenderer} from './game';
 
 export class CanvasRenderer implements IRenderer {
     private container: HTMLElement;

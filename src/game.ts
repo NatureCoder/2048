@@ -134,21 +134,21 @@ export class Game {
             rowOrCol.reverse();
         }
         let slided = this.defragRowOrCol(rowOrCol, dir);
-        const merged = this.mergeCells(rowOrCol);
+        const merged = this.mergeCells(rowOrCol, dir);
         if (merged) {
             slided = this.defragRowOrCol(rowOrCol, dir) || slided;
         }
         return merged || slided;
     }
 
-    private mergeCells(rowOrCol: CellOrNull[]): boolean {
+    private mergeCells(rowOrCol: CellOrNull[], dir: direction): boolean {
         let merged = false;
         let idx = rowOrCol.length - 1;
         while (idx > 0) {
             const curr = rowOrCol[idx];
             const next = rowOrCol[idx - 1];
             if (curr && curr.canMergeWith(next)) {
-                this._score += this.grid.mergeCellWith(curr, next!);
+                this._score += this.grid.mergeCellWith(curr, next!, dir);
                 rowOrCol[idx - 1] = null; // updating rowOrCol is only for testing purposes
                 merged = true;
             }

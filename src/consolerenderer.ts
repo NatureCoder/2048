@@ -1,4 +1,4 @@
-import { IGameState, IRenderer} from "./game";
+import { IGameState, IRenderer} from './game';
 
 export class ConsoleRenderer implements IRenderer {
     constructor() {
