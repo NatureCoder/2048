@@ -14,21 +14,21 @@ document.addEventListener('DOMContentLoaded', function(ev: Event): void {
         // const renderer = new CanvasRenderer(cntnr);
         const renderer = new HTMLRenderer(cntnr, gridsize);
         const inputHandler = new InputHandler(cntnr);
-        // const testvals = [
-        //     32,   64,   4,   16,
-        //    128,  512,  64,    2,
-        //      2,    8,  64,  256,
-        //      4,  128,   8, 1024
-        // ];
+        const testvals = [
+            32,   64,   4,   16,
+           128,  512,  64,    2,
+             2,    8,  64,  256,
+             4,  128,   8, 1024
+        ];
         // const testvals = [
         // 2, 2, 2, 2,
         // 2, 2, 0, 0,
         // 0, 0, 0, 0,
         // 0, 0, 0, 0
         // ];
-        // const grid = Grid.fromArray(testvals, 4);
-        // const game = new Game(grid, renderer, inputHandler);
-        const game = new Game(gridsize, renderer, inputHandler);
+        const grid = Grid.fromArray(testvals, 4);
+        const game = new Game(grid, renderer, inputHandler);
+        // const game = new Game(gridsize, renderer, inputHandler);
         game.start(2);
     }
 });

@@ -1,8 +1,8 @@
 $fontsize: 20px
-$cellsize: 90px
+$cellsize: 100px
 $gridmargin: 15px
-$cellmargin: 5px
-$borderwidth: 5px
+$cellmargin: 4px
+$borderwidth: 4px
 $duration: 0.25s
 $expmax: 11
 
@@ -16,15 +16,16 @@ body
     padding: 0
 
 .container
-    width: 500px
+    width: 450px
     margin: 0 auto
     padding: 20px
+    // border: 1px solid white;
 h1
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
     font-size: 50pt
     color: chocolate
-    text-shadow: 0 2px white
-    text-align: center
+    text-shadow: 0 2px 2px white
+    text-align: left
     margin-top: 0
     margin-bottom: 50px
 
@@ -32,11 +33,12 @@ h1
     witdh: 100%
 
 .grid
-    background-image: repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.1) 15px, rgba(255,255,255,.1) 30px)
-    margin: 20px auto
+    // background-image: repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.1) 15px, rgba(255,255,255,.1) 30px)
+    margin: 0 auto
+    background: #282828
     position: relative
-    border: 2px solid #aaa
-    box-shadow: 0px 0px 0px 5px chocolate, 0px 0px 0px 7px #aaa, 0px 0px 25px 15px #000
+    // border: 2px solid #aaa
+    box-shadow: 0px 0px 0px 5px #444, 0px 0px 0px 7px #888, 0px 0px 0px 12px #000
     width: calc((var(--gridsize) * #{$cellsize}) + (var(--gridsize) - 1) * #{$cellmargin} + (2 * #{$gridmargin}))
     height: calc((var(--gridsize) * #{$cellsize}) + (var(--gridsize) - 1) * #{$cellmargin} + (2 * #{$gridmargin}))
 
@@ -75,13 +77,13 @@ h1
     height: 100%
     text-align: center
     line-height: $cellsize - (2 * $borderwidth)
-    font-family: Arial
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
     font-size: $fontsize
-    font-weight: normal
+    font-weight: bold
     user-select: none
     box-sizing: border-box
     border: $borderwidth solid red
-    border-radius: $cellsize / 4
+    border-radius: $cellsize / 8
     box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.7)
 
 .front
