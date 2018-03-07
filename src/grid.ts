@@ -5,7 +5,7 @@ import { randomInt, nf } from './helpers';
 
 export interface IGridState {
     size: number;
-    cells: ICellState[];
+    cells: ICellState[]; // contains only filled cells
 }
 
 export class Grid {
