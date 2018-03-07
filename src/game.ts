@@ -5,7 +5,6 @@ import { Cell, CellOrNull } from './cell';
 import { randomInt } from './helpers';
 import { InputHandler } from './inputhandler';
 
-const filledAtStart = 2;
 export type GridOrSize = Grid | number;
 export interface IGameState {
     won: boolean;
@@ -64,8 +63,8 @@ export class Game {
         this._score = 0;
     }
 
-    public start(): void {
-        for (let i = 0; i < filledAtStart; i++) {
+    public start(fillAtStart: number = 2): void {
+        for (let i = 0; i < fillAtStart; i++) {
             const pos = this.grid.randomEmptyPosition();
             if (pos) {
                 this.grid.addCell(pos, this.newCellValue());

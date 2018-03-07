@@ -7,7 +7,7 @@ import { InputHandler } from './inputhandler';
 import { Grid } from './grid';
 
 document.addEventListener('DOMContentLoaded', function(ev: Event): void {
-    const cntnr = document.getElementById('container');
+    const cntnr = document.getElementById('game');
     if (cntnr) {
         const gridsize = 4;
         // const renderer = new ConsoleRenderer();
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function(ev: Event): void {
         //      4,  128,   8, 1024
         // ];
         // const testvals = [
-        // 2, 2, 0, 0,
+        // 2, 2, 2, 2,
         // 2, 2, 0, 0,
         // 0, 0, 0, 0,
         // 0, 0, 0, 0
@@ -29,6 +29,6 @@ document.addEventListener('DOMContentLoaded', function(ev: Event): void {
         // const grid = Grid.fromArray(testvals, 4);
         // const game = new Game(grid, renderer, inputHandler);
         const game = new Game(gridsize, renderer, inputHandler);
-        game.start();
+        game.start(2);
     }
 });

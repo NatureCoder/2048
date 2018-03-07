@@ -10,7 +10,6 @@ export interface ICellState {
     oldVal?: number;
     mergeDir?: direction;
     new: boolean;
-    removed?: boolean;
 }
 export class Cell {
     public static fromState(state: ICellState): Cell {

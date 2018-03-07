@@ -2,10 +2,16 @@ import { IGameState, IRenderer} from './game';
 import { ICellState } from './cell';
 import { direction } from './direction';
 
-interface ICellToMove {
-    state: ICellState;
-    cell: HTMLDivElement;
+interface IRenderState extends ICellState {
+    appearing: boolean;
+    disappearing: boolean;
+    flipping: boolean;
+    moving: boolean;
     moveunder: boolean;
+}
+interface ICellToAnimate {
+    cell: HTMLDivElement;
+    state: IRenderState;
 }
 interface ITileToFlip {
     tile: HTMLDivElement;
@@ -28,49 +34,60 @@ export class HTMLRenderer implements IRenderer {
             const grid = document.createElement('div');
             grid.className = ('grid');
 
-            const cellsToMove: ICellToMove[] = [];
+            const cellsToMove: ICellToAnimate[] = [];
+            const cellsToAppear: ICellToAnimate[] = [];
+            const cellsToDisappear: ICellToAnimate[] = [];
             const tilesToFlip: ITileToFlip[] = [];
-            const tilesToAppear: HTMLDivElement[] = [];
-            const tilesToDisappear: HTMLDivElement[] = [];
-
-            for (const cellstate of state.grid.removedCells) {
-                cellstate.removed = true;
-            }
             let cellstates = state.grid.cells;
+
+            // add disappearing flags
+            for (const cellstate of state.grid.removedCells) {
+                (cellstate as IRenderState).disappearing = true;
+            }
+            // add append removed cells, so we can process all in 1 go
             cellstates = cellstates.concat(state.grid.removedCells);
+
             for (const cellstate of cellstates) {
 
-                const x = cellstate.pos.x;
-                const y = cellstate.pos.y;
-                const moving = (cellstate.oldPos !== undefined);
-                const flipping = (cellstate.oldVal !== undefined);
+                const rs: IRenderState = cellstate as IRenderState;
+                rs.appearing = cellstate.new;
+                rs.moving = (cellstate.oldPos !== undefined);
+                rs.flipping = (cellstate.oldVal !== undefined);
+                rs.moveunder = rs.moving && (!rs.flipping);
 
                 const cell = document.createElement('div');
-                if (moving) {
+                if (rs.moving) {
                     // set old pos now
                     const oldX = cellstate.oldPos!.x;
                     const oldY = cellstate.oldPos!.y;
-                    if (!flipping) {
-                        cell.className = 'cell moveunder ' + this.xyToClassNames(oldX, oldY);
-                    } else {
-                        cell.className = 'cell ' + this.xyToClassNames(oldX, oldY);
-                    }
+                    cell.className = this.getCellClassesBefore(oldX, oldY, rs);
                     // move later
-                    cellsToMove.push( {state: cellstate, cell, moveunder: !flipping} );
+                    cellsToMove.push( {cell, state: rs} );
 
                 } else {
-                    cell.className = 'cell ' + this.xyToClassNames(x, y);
+                    const x = cellstate.pos.x;
+                    const y = cellstate.pos.y;
+                    cell.className = this.getCellClassesBefore(x, y, rs);
+                }
+                if (rs.appearing) {
+                    // appear later
+                    cellsToAppear.push( {cell, state: rs} );
+                }
+                if (rs.disappearing) {
+                    // disappear later
+                    cellsToDisappear.push( {cell, state: rs} );
                 }
 
                 const tile = document.createElement('div');
                 tile.className = 'tile';
                 const front = document.createElement('div');
 
-                if (flipping) {
+                if (rs.flipping) {
                     // set old val to front and new val to back
                     front.innerHTML = cellstate.oldVal!.toString();
                     front.className = 'front ' + this.valueToClassName(cellstate.oldVal!);
                     tile.appendChild(front);
+
                     const back = document.createElement('div');
                     back.innerHTML = cellstate.val.toString();
                     back.className = 'back ' + this.valueToClassName(cellstate.val) +
@@ -84,17 +101,7 @@ export class HTMLRenderer implements IRenderer {
                     front.innerHTML = cellstate.val.toString();
                     front.className = 'front ' + this.valueToClassName(cellstate.val);
                     tile.appendChild(front);
-                    // new tile ?
-                    if (cellstate.new) {
-                        // set initial style
-                        tile.className = 'tile willappear';
-                        // appear later
-                        tilesToAppear.push(tile);
-                    }
-                    // removed tile ?
-                    if (cellstate.removed) {
-                        tilesToDisappear.push(tile);
-                    }
+
                 }
                 cell.appendChild(tile);
                 grid.appendChild(cell);
@@ -108,23 +115,23 @@ export class HTMLRenderer implements IRenderer {
                 for (const cell of cellsToMove) {
                     const x = cell.state.pos.x;
                     const y = cell.state.pos.y;
-                    if (cell.moveunder) {
-                        cell.cell.className = 'cell moveunder ' + this.xyToClassNames(x, y);
-                    } else {
-                        cell.cell.className = 'cell ' + this.xyToClassNames(x, y);
-                    }
+                    cell.cell.className = this.getCellClassesAfter(x, y, cell.state);
+                }
+                // appear new tiles
+                for (const cell of cellsToAppear) {
+                    const x = cell.state.pos.x;
+                    const y = cell.state.pos.y;
+                    cell.cell.className = this.getCellClassesAfter(x, y, cell.state);
+                }
+                // disappear removed tiles
+                for (const cell of cellsToDisappear) {
+                    const x = cell.state.pos.x;
+                    const y = cell.state.pos.y;
+                    cell.cell.className = this.getCellClassesAfter(x, y, cell.state);
                 }
                 // flip tiles
                 for (const tile of tilesToFlip) {
                     tile.tile.className = 'tile ' + this.flippedClassFromDir(tile.dir);
-                }
-                // appear new tiles
-                for (const tile of tilesToAppear) {
-                    tile.className = 'tile appeared';
-                }
-                // disappear removed tiles
-                for (const tile of tilesToDisappear) {
-                    tile.className = 'tile disappeared';
                 }
             });
         });
@@ -152,5 +159,33 @@ export class HTMLRenderer implements IRenderer {
 
     private flippedClassFromDir(dir: direction) {
         return 'flipped-' + direction[dir];
+    }
+
+    private getCellClassesBefore(x: number, y: number, rs: IRenderState): string {
+        let classes = 'cell ' + this.xyToClassNames(x, y);
+        if (rs.moveunder) {
+            classes += ' moveunder';
+        }
+        if (rs.appearing) {
+            classes += ' willappear';
+        }
+        if (rs.disappearing) {
+            classes += ' willdisappear';
+        }
+        return classes;
+    }
+
+    private getCellClassesAfter(x: number, y: number, rs: IRenderState): string {
+        let classes = 'cell ' + this.xyToClassNames(x, y);
+        if (rs.moveunder) {
+            classes += ' moveunder';
+        }
+        if (rs.appearing) {
+            classes += ' appeared';
+        }
+        if (rs.disappearing) {
+            classes += ' disappeared';
+        }
+        return classes;
     }
 }
