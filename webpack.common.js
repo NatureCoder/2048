@@ -1,5 +1,6 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const SRC = path.resolve( __dirname, 'src' );
 const DIST = path.resolve(__dirname, 'dist');
@@ -31,19 +32,10 @@ module.exports = {
                 },
                 {
                     test:/\.sass$/,
-                    use: [{
-                        loader: 'style-loader'  // creates style nodes from JS strings
-                    }, {
-                        loader: 'css-loader',   // translates CSS into CommonJS
-                        options: {
-                            sourceMap: true
-                        }
-                    }, {
-                        loader: 'sass-loader',  // compiles Sass to CSS
-                        options: {
-                            sourceMap: true
-                        }
-                    }]
+                    use: ExtractTextPlugin.extract({
+                        fallback: 'style-loader',
+                        use: ['css-loader', 'sass-loader']
+                    })
                 }
             ]
     },
@@ -59,5 +51,6 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin([DIST]),
+        new ExtractTextPlugin('styles.css')
     ]
 };
