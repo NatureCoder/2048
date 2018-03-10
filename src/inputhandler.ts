@@ -8,10 +8,14 @@ interface IEvents {
 export class InputHandler {
     private container: HTMLElement;
     private events: IEvents;
+    private restartBtn: HTMLDivElement;
 
     constructor(container: HTMLElement) {
         this.container = container;
         document.addEventListener('keydown', this.handleKeyDown.bind(this));
+        this.restartBtn = document.getElementById('restart') as HTMLDivElement;
+        this.restartBtn.addEventListener('click', this.restartClick.bind(this));
+
         this.events = {};
     }
 
@@ -25,6 +29,10 @@ export class InputHandler {
         for (const cb of callbacks) {
             cb(...args);
         }
+    }
+    private restartClick(ev: MouseEvent) {
+        this.trigger('restart');
+        ev.preventDefault();
     }
 
     private handleKeyDown(ev: KeyboardEvent) {

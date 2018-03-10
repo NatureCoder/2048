@@ -41,6 +41,10 @@ export class Grid {
 
     constructor(size: number) {
         this._size = size;
+        this.reset();
+    }
+
+    public reset() {
         this._cells = [];
         this._removedCells = [];
         for (let idx = 0; idx < this.size * this.size; idx++) {
@@ -85,7 +89,7 @@ export class Grid {
         return s;
     }
 
-    public addCell(pos: Pos, val: number): void {
+    public addCell(pos: Pos, val: number) {
         const cell = new Cell(val, pos);
         const idx = this.posToIndex(pos);
         this._cells[idx] = cell;
@@ -149,7 +153,7 @@ export class Grid {
         return empty.length ? empty[idx] : null;
     }
 
-    public prepareMove(): void {
+    public prepareMove() {
         this._removedCells = []; // reset
         const cells = this.filledCells();
         for (const cell of cells) {
@@ -219,7 +223,7 @@ export class Grid {
 
     }
 
-    private removeCell(cell: Cell, newPos: Pos): void {
+    private removeCell(cell: Cell, newPos: Pos) {
         // set new position for removed cell
         const oldPpos = cell.pos;
         cell.pos = newPos;

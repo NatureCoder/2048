@@ -6,13 +6,14 @@ import { HTMLRenderer } from './htmlrenderer';
 import { InputHandler } from './inputhandler';
 import { Grid } from './grid';
 
-document.addEventListener('DOMContentLoaded', function(ev: Event): void {
+document.addEventListener('DOMContentLoaded', function(ev: Event) {
     const cntnr = document.getElementById('game');
+    const scoreElmt = document.getElementById('score');
     if (cntnr) {
         const gridsize = 4;
         // const renderer = new ConsoleRenderer();
         // const renderer = new CanvasRenderer(cntnr);
-        const renderer = new HTMLRenderer(cntnr, gridsize);
+        const renderer = new HTMLRenderer(cntnr, scoreElmt!, gridsize);
         const inputHandler = new InputHandler(cntnr);
         const testvals = [
             32,   64,   4,   16,

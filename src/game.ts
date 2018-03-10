@@ -15,6 +15,7 @@ export interface IGameState {
 
 export interface IRenderer {
     render(state: IGameState): void;
+    updatescore(score: number): void;
 }
 
 export class Game {
@@ -42,6 +43,12 @@ export class Game {
     get score() {
         return this._score;
     }
+    set score(val) {
+        this._score = val;
+        if (this._renderer) {
+            this._renderer.updatescore(val);
+        }
+    }
 
     constructor(gridOrSize: GridOrSize = 4, renderer?: IRenderer, inputHandler?: InputHandler) {
         if (gridOrSize instanceof Grid) {
@@ -53,17 +60,24 @@ export class Game {
         this._inputHandler = inputHandler;
         if (this._inputHandler) {
             this._inputHandler.on('move', this.playMove.bind(this));
+            this._inputHandler.on('restart', this.restart.bind(this));
         }
         this.reset();
+    }
+
+    public restart() {
+        this.grid.reset();
+        this.reset();
+        this.start();
     }
 
     public reset() {
         this._done = false;
         this._won = false;
-        this._score = 0;
+        this.score = 0;
     }
 
-    public start(fillAtStart: number = 2): void {
+    public start(fillAtStart: number = 2) {
         for (let i = 0; i < fillAtStart; i++) {
             const pos = this.grid.randomEmptyPosition();
             if (pos) {
@@ -113,7 +127,7 @@ export class Game {
         return changed;
     }
 
-    public playMove(dir: direction): void {
+    public playMove(dir: direction) {
         const changed = this.makeMove(dir);
         if (changed) {
             const pos = this.grid.randomEmptyPosition();
@@ -147,7 +161,7 @@ export class Game {
             const curr = rowOrCol[idx];
             const next = rowOrCol[idx - 1];
             if (curr && curr.canMergeWith(next)) {
-                this._score += this.grid.mergeCellWith(curr, next!, dir);
+                this.score += this.grid.mergeCellWith(curr, next!, dir);
                 rowOrCol[idx - 1] = null; // updating rowOrCol is only for testing purposes
                 merged = true;
             }

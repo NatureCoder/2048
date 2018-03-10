@@ -19,14 +19,21 @@ interface ITileToFlip {
 }
 export class HTMLRenderer implements IRenderer {
     private container: HTMLElement;
+    private scoreElmt: HTMLElement;
 
-    constructor(container: HTMLElement, gridsize: number) {
+    constructor(container: HTMLElement, scoreElmt: HTMLElement, gridsize: number) {
         this.container = container;
         this.container.innerHTML = '';
+        this.scoreElmt = scoreElmt;
+        this.scoreElmt.innerHTML = '';
         this.setGridSizeCSS(gridsize);
     }
 
-    public render(state: IGameState): void {
+    public updatescore(score: number) {
+        this.scoreElmt.innerHTML = score.toString();
+    }
+
+    public render(state: IGameState) {
         window.requestAnimationFrame(() => {
 
             this.container.innerHTML = '';

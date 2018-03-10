@@ -3,17 +3,24 @@ import { IGameState, IRenderer} from './game';
 export class CanvasRenderer implements IRenderer {
     private container: HTMLElement;
     private canvas: HTMLCanvasElement;
+    private scoreElmt: HTMLElement;
 
-    constructor(container: HTMLElement) {
+    constructor(container: HTMLElement, scoreElmt: HTMLElement) {
         this.container = container;
         this.container.innerHTML = '';
+        this.scoreElmt = scoreElmt;
+        this.scoreElmt.innerHTML = '';
+
         this.canvas = document.createElement("canvas");
         this.canvas.width = 600;
         this.canvas.height = 600;
         this.container.appendChild(this.canvas);
     }
 
-    public render(state: IGameState): void {
+    public updatescore(score: number) {
+        this.scoreElmt.innerHTML = score.toString();
+    }
+    public render(state: IGameState) {
 
         function clearBackground(ctx: CanvasRenderingContext2D, w: number, h: number) {
             ctx.fillStyle = 'dimgray';

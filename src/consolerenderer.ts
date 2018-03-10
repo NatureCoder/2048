@@ -4,7 +4,12 @@ export class ConsoleRenderer implements IRenderer {
     constructor() {
         //
     }
-    public render(state: IGameState): void {
+
+    public updatescore(score: number) {
+        console.log(`score: ${score}`);
+    }
+
+    public render(state: IGameState) {
         const cells: number[][] = [];
         for (let y = 0; y < state.grid.size; y++) {
             cells[y] = [];
