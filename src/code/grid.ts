@@ -1,16 +1,22 @@
 import { Pos } from './position';
 import { Direction, direction, DIRECTIONS } from './direction';
-import { Cell, ICellState, CellOrNull } from './cell';
+import { Cell, ICellState, ICellRenderState, CellOrNull } from './cell';
 import { randomInt, nf } from './helpers';
 
 export interface IGridState {
     size: number;
     cells: ICellState[]; // contains only filled cells
-    // these are only for displaying purposes:
-    removedCells: ICellState[]; // cells that are removed in last move
+}
+
+ // these are only for displaying purposes:
+export interface IGridRenderState {
+    size: number;
+    cells: ICellRenderState[]; // contains only filled cells
+    removedCells: ICellRenderState[];
 }
 
 export class Grid {
+
     public static fromArray(vals: number[], size: number = 4): Grid {
         if (vals.length !== size * size) {
             throw Error("invalid array length");
@@ -32,12 +38,12 @@ export class Grid {
         return grid;
     }
 
+    private _cells: CellOrNull[] = [];
+    private _removedCells: Cell[] = [];
     private _size: number;
     get size() {
         return this._size;
     }
-    private _cells: CellOrNull[] = [];
-    private _removedCells: Cell[] = [];
 
     constructor(size: number) {
         this._size = size;
@@ -54,14 +60,27 @@ export class Grid {
 
     public toState(): IGridState {
         const cellStates: ICellState[] = [];
-        const removedStates: ICellState[]  = [];
         this._cells.forEach((cell) => {
             if (cell) {
                 cellStates.push(cell.toState());
             }
         });
+        return {
+            size: this.size,
+            cells: cellStates,
+        };
+    }
+
+    public toRenderState(): IGridRenderState {
+        const cellStates: ICellRenderState[] = [];
+        const removedStates: ICellRenderState[]  = [];
+        this._cells.forEach((cell) => {
+            if (cell) {
+                cellStates.push(cell.toRenderState());
+            }
+        });
         this._removedCells.forEach((cell) => {
-            removedStates.push(cell.toState());
+            removedStates.push(cell.toRenderState());
         });
         return {
             size: this.size,

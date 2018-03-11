@@ -1,8 +1,8 @@
-import { IGameState, IRenderer} from './game';
-import { ICellState } from './cell';
+import { IGameRenderState, IRenderer} from './game';
+import { ICellRenderState } from './cell';
 import { direction } from './direction';
 
-interface IRenderState extends ICellState {
+interface ICellRenderStateEx extends ICellRenderState {
     appearing: boolean;
     disappearing: boolean;
     flipping: boolean;
@@ -11,7 +11,7 @@ interface IRenderState extends ICellState {
 }
 interface ICellToAnimate {
     cell: HTMLDivElement;
-    state: IRenderState;
+    state: ICellRenderStateEx;
 }
 interface ITileToFlip {
     tile: HTMLDivElement;
@@ -43,7 +43,7 @@ export class HTMLRenderer implements IRenderer {
         this.highscoreElmt.innerHTML = highscore.toString();
     }
 
-    public render(state: IGameState) {
+    public render(state: IGameRenderState) {
         if (!state.done) {
             this.doneStateRendered = false; // reset, possible new game
         } else {
@@ -59,7 +59,7 @@ export class HTMLRenderer implements IRenderer {
         this.renderInitialState(state);
     }
 
-    private renderInitialState(state: IGameState) {
+    private renderInitialState(state: IGameRenderState) {
 
         window.requestAnimationFrame(() => {
 
@@ -76,13 +76,13 @@ export class HTMLRenderer implements IRenderer {
 
             // add disappearing flags
             for (const cellstate of state.grid.removedCells) {
-                (cellstate as IRenderState).disappearing = true;
+                (cellstate as ICellRenderStateEx).disappearing = true;
             }
             // add append removed cells, so we can process all in 1 go
             cellstates = cellstates.concat(state.grid.removedCells);
 
             for (const cellstate of cellstates) {
-                const rs: IRenderState = cellstate as IRenderState;
+                const rs = cellstate as ICellRenderStateEx;
                 rs.appearing = cellstate.new;
                 rs.moving = (cellstate.oldPos !== undefined);
                 rs.flipping = (cellstate.oldVal !== undefined);
@@ -109,7 +109,7 @@ export class HTMLRenderer implements IRenderer {
         });
     }
 
-    private makeCell(rs: IRenderState): HTMLDivElement {
+    private makeCell(rs: ICellRenderStateEx): HTMLDivElement {
         const cell = document.createElement('div');
         if (rs.moving) {
             // set old pos now
@@ -135,7 +135,7 @@ export class HTMLRenderer implements IRenderer {
         return cell;
     }
 
-    private makeTile(rs: IRenderState): HTMLDivElement {
+    private makeTile(rs: ICellRenderStateEx): HTMLDivElement {
         const tile = document.createElement('div');
         tile.className = 'tile';
         const front = document.createElement('div');
@@ -164,7 +164,7 @@ export class HTMLRenderer implements IRenderer {
         return tile;
     }
 
-    private continueInNextFrame(state: IGameState) {
+    private continueInNextFrame(state: IGameRenderState) {
 
         window.requestAnimationFrame(() => {
 
@@ -238,7 +238,7 @@ export class HTMLRenderer implements IRenderer {
         return 'flipped-' + direction[dir];
     }
 
-    private getCellClassesBefore(x: number, y: number, rs: IRenderState): string {
+    private getCellClassesBefore(x: number, y: number, rs: ICellRenderStateEx): string {
         let classes = 'cell ' + this.xyToClassNames(x, y);
         if (rs.moveunder) {
             classes += ' moveunder';
@@ -252,7 +252,7 @@ export class HTMLRenderer implements IRenderer {
         return classes;
     }
 
-    private getCellClassesAfter(x: number, y: number, rs: IRenderState): string {
+    private getCellClassesAfter(x: number, y: number, rs: ICellRenderStateEx): string {
         let classes = 'cell ' + this.xyToClassNames(x, y);
         if (rs.moveunder) {
             classes += ' moveunder';

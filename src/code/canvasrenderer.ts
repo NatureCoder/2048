@@ -1,4 +1,4 @@
-import { IGameState, IRenderer} from './game';
+import { IGameRenderState, IRenderer} from './game';
 
 // same values as in styles.sass
 const containerSize = 450;
@@ -31,7 +31,7 @@ export class CanvasRenderer implements IRenderer {
         this.highscoreElmt.innerHTML = highscore.toString();
     }
 
-    public render(state: IGameState) {
+    public render(state: IGameRenderState) {
 
         function clearBackground(ctx: CanvasRenderingContext2D, w: number, h: number) {
             ctx.fillStyle = 'dimgray';

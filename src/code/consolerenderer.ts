@@ -1,4 +1,4 @@
-import { IGameState, IRenderer} from './game';
+import { IGameRenderState, IRenderer} from './game';
 
 export class ConsoleRenderer implements IRenderer {
     constructor() {
@@ -9,7 +9,7 @@ export class ConsoleRenderer implements IRenderer {
         console.log(`score: ${score}, best: ${highscore}`);
     }
 
-    public render(state: IGameState) {
+    public render(state: IGameRenderState) {
         const cells: number[][] = [];
         for (let y = 0; y < state.grid.size; y++) {
             cells[y] = [];

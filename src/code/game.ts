@@ -1,5 +1,5 @@
 import { Pos } from './position';
-import { Grid, IGridState } from './grid';
+import { Grid, IGridState, IGridRenderState } from './grid';
 import { Direction, direction, DIRECTIONS } from './direction';
 import { Cell, CellOrNull } from './cell';
 import { randomInt } from './helpers';
@@ -14,8 +14,15 @@ export interface IGameState {
     grid: IGridState;
 }
 
+export interface IGameRenderState {
+    won: boolean;
+    done: boolean;
+    score: number;
+    highscore: number;
+    grid: IGridRenderState;
+}
 export interface IRenderer {
-    render(state: IGameState): void;
+    render(state: IGameRenderState): void;
     updatescores(score: number, highscore: number): void;
 }
 
@@ -34,7 +41,7 @@ export class Game {
     private _won: boolean = false;
     private _done: boolean = false;
     private _score: number = 0;
-    private _highscore: number = 0;
+    private _highscore: number = 0; // TODO highscore does NOT belong in game
     private _renderer?: IRenderer;
     private _inputHandler?: InputHandler;
     get won() {
@@ -109,6 +116,16 @@ export class Game {
             score: this.score,
             highscore: this.highscore,
             grid: this.grid.toState()
+        };
+    }
+
+    public toRenderState(): IGameRenderState {
+        return {
+            won: this.won,
+            done: this.done,
+            score: this.score,
+            highscore: this.highscore,
+            grid: this.grid.toRenderState()
         };
     }
 
@@ -221,7 +238,7 @@ export class Game {
 
     private render() {
         if (this._renderer) {
-            this._renderer.render(this.toState());
+            this._renderer.render(this.toRenderState());
         }
     }
 }
