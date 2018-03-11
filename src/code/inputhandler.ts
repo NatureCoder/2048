@@ -5,17 +5,20 @@ interface IEvents {
     [event: string]: callback[];
 }
 
-export class InputHandler {
+export interface IInputHandler {
+    on(event: string, cb: callback): void;
+}
+
+export class InputHandler implements IInputHandler {
     private container: HTMLElement;
     private events: IEvents;
-    private restartBtn: HTMLDivElement;
+    private restartBtn: HTMLElement;
 
-    constructor(container: HTMLElement) {
+    constructor(container: HTMLElement, restartBtn: HTMLElement) {
         this.container = container;
         document.addEventListener('keydown', this.handleKeyDown.bind(this));
-        this.restartBtn = document.getElementById('restart') as HTMLDivElement;
+        this.restartBtn = restartBtn;
         this.restartBtn.addEventListener('click', this.restartClick.bind(this));
-
         this.events = {};
     }
 

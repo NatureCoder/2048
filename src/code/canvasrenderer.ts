@@ -93,7 +93,7 @@ export class CanvasRenderer implements IRenderer {
             }
         }
 
-        const cols = state.grid.size;
+        const cols = state.size;
         const gridsize = (cols * cellsize) + (cols - 1) * cellmargin + (2 * gridmargin);
         this.canvas.width = gridsize;
         this.canvas.height = gridsize;

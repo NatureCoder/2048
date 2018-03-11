@@ -1,6 +1,14 @@
 import { Direction } from './direction';
 
-export class Pos {
+export interface IPos {
+    x: number;
+    y: number;
+}
+export class Pos implements IPos {
+    public static fromState(pos: IPos) {
+        return new Pos(pos.x, pos.y);
+    }
+
     public x: number;
     public y: number;
     constructor(x?: number, y?: number) {

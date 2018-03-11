@@ -30,7 +30,7 @@ module.exports = merge(common, {
         }),
         new HtmlWebpackPlugin({
             filename: 'index.html',
-            template: 'index.html',
+            template: 'src/index.html',
             title: '2048 game - production'
         }),
         new webpack.DefinePlugin({

@@ -1,14 +1,14 @@
-import { Pos } from './position';
+import { Pos, IPos } from './position';
 import { direction } from './direction';
 
 export type CellOrNull = Cell | null;
 export interface ICellState {
-    pos: Pos;
+    pos: IPos;
     val: number;
 }
-// these are only for displaying purposes:
+
 export interface ICellRenderState extends ICellState {
-    oldPos?: Pos;
+    oldPos?: IPos;
     oldVal?: number;
     mergeDir?: direction;
     new: boolean;
@@ -16,7 +16,7 @@ export interface ICellRenderState extends ICellState {
 
 export class Cell {
     public static fromState(state: ICellState): Cell {
-        return new Cell(state.val, state.pos);
+        return new Cell(state.val, Pos.fromState(state.pos));
     }
     private _oldVal?: number = undefined;
     private _oldPos?: Pos = undefined;

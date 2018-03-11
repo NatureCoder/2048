@@ -3,18 +3,19 @@ import { Grid, IGridState, IGridRenderState } from './grid';
 import { Direction, direction, DIRECTIONS } from './direction';
 import { Cell, CellOrNull } from './cell';
 import { randomInt } from './helpers';
-import { InputHandler } from './inputhandler';
+import { IInputHandler } from './inputhandler';
+import { IGameStorage } from './storage';
 
 export type GridOrSize = Grid | number;
 export interface IGameState {
     won: boolean;
     done: boolean;
     score: number;
-    highscore: number;
     grid: IGridState;
 }
 
 export interface IGameRenderState {
+    size: number;
     won: boolean;
     done: boolean;
     score: number;
@@ -27,23 +28,26 @@ export interface IRenderer {
 }
 
 export class Game {
-    public static fromState(state: IGameState, renderer?: IRenderer, inputHandler?: InputHandler): Game {
+    public static fromState(state: IGameState, renderer?: IRenderer,
+                            inputHandler?: IInputHandler, storage?: IGameStorage): Game {
         const grid = Grid.fromState(state.grid);
-        const game = new Game(grid, renderer, inputHandler);
+        const game = new Game(grid, renderer, inputHandler, storage, true);
         game._won = state.won;
         game._done = state.done;
         game._score = state.score;
-        game._highscore = state.highscore;
         return game;
     }
 
     public readonly grid: Grid;
+    private _started: boolean = false;
     private _won: boolean = false;
     private _done: boolean = false;
     private _score: number = 0;
-    private _highscore: number = 0; // TODO highscore does NOT belong in game
     private _renderer?: IRenderer;
-    private _inputHandler?: InputHandler;
+    private _inputHandler?: IInputHandler;
+    private _storage?: IGameStorage;
+
+    private readonly size: number;
     get won() {
         return this._won;
     }
@@ -53,11 +57,17 @@ export class Game {
     set done(val) {
         this._done = val;
     }
-    get highscore() {
-        return this._highscore;
+    get highscore(): number {
+        if (this._storage) {
+            return this._storage.getHighScore(this.size);
+        } else {
+            return 0;
+        }
     }
-    set highscore(val) {
-        this._highscore = val;
+    set highscore(val: number) {
+        if (this._storage) {
+            this._storage.storeHighScore(this.size, val);
+        }
     }
     get score() {
         return this._score;
@@ -65,21 +75,24 @@ export class Game {
     set score(val) {
         this._score = val;
         if (val > this.highscore) {
-            this._highscore = val;
+            this.highscore = val;
         }
-        if (this._renderer) {
-            this._renderer.updatescores(val, this.highscore);
-        }
+        this.updateScores();
     }
 
-    constructor(gridOrSize: GridOrSize = 4, renderer?: IRenderer, inputHandler?: InputHandler) {
+    constructor(gridOrSize: GridOrSize = 4, renderer?: IRenderer,
+                inputHandler?: IInputHandler, storage?: IGameStorage, fromState: boolean = false) {
         if (gridOrSize instanceof Grid) {
              this.grid = gridOrSize;
+             this.size = this.grid.size;
         } else {
             this.grid = new Grid(gridOrSize);
+            this.size = gridOrSize;
         }
         this._renderer = renderer;
         this._inputHandler = inputHandler;
+        this._storage = storage;
+        this._started = fromState;
         if (this._inputHandler) {
             this._inputHandler.on('move', this.playMove.bind(this));
             this._inputHandler.on('restart', this.restart.bind(this));
@@ -90,6 +103,7 @@ export class Game {
     public restart() {
         this.grid.reset();
         this.reset();
+        this._started = false;
         this.start();
     }
 
@@ -100,13 +114,17 @@ export class Game {
     }
 
     public start(fillAtStart: number = 2) {
-        for (let i = 0; i < fillAtStart; i++) {
-            const pos = this.grid.randomEmptyPosition();
-            if (pos) {
-                this.grid.addCell(pos, this.newCellValue());
+        if (!this._started) {
+            for (let i = 0; i < fillAtStart; i++) {
+                const pos = this.grid.randomEmptyPosition();
+                if (pos) {
+                    this.grid.addCell(pos, this.newCellValue());
+                }
             }
+            this.save();
         }
         this.render();
+        this.updateScores();
     }
 
     public toState(): IGameState {
@@ -114,13 +132,13 @@ export class Game {
             won: this.won,
             done: this.done,
             score: this.score,
-            highscore: this.highscore,
             grid: this.grid.toState()
         };
     }
 
     public toRenderState(): IGameRenderState {
         return {
+            size: this.size,
             won: this.won,
             done: this.done,
             score: this.score,
@@ -174,6 +192,7 @@ export class Game {
             this._won = this.hasWon();
             this._done = this._won || !this.canMakeMove();
         }
+        this.save();
         this.render();
     }
 
@@ -205,6 +224,7 @@ export class Game {
         }
         return merged;
     }
+
     private defragRowOrCol(rowOrCol: CellOrNull[], d: direction): boolean {
         let changed = false;
         let idx = rowOrCol.length - 1;
@@ -222,6 +242,7 @@ export class Game {
         }
         return changed;
     }
+
     private slideAllCellsOverOnce(rowOrCol: CellOrNull[], startIdx: number, d: direction): boolean {
         let moved = false;
         for (let idx = startIdx; idx > 0; idx--) {
@@ -239,6 +260,17 @@ export class Game {
     private render() {
         if (this._renderer) {
             this._renderer.render(this.toRenderState());
+        }
+    }
+    private updateScores() {
+        if (this._renderer) {
+            this._renderer.updatescores(this.score, this.highscore);
+        }
+    }
+
+    private save() {
+        if (this._storage) {
+            this._storage.save(this.toState());
         }
     }
 }

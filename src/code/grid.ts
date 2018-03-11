@@ -8,7 +8,6 @@ export interface IGridState {
     cells: ICellState[]; // contains only filled cells
 }
 
- // these are only for displaying purposes:
 export interface IGridRenderState {
     size: number;
     cells: ICellRenderState[]; // contains only filled cells
@@ -33,7 +32,7 @@ export class Grid {
     public static fromState(state: IGridState): Grid {
         const grid = new Grid(state.size);
         for (const cellState of state.cells) {
-            grid.addCell(cellState.pos, cellState.val);
+            grid.addCell(Pos.fromState(cellState.pos), cellState.val);
         }
         return grid;
     }

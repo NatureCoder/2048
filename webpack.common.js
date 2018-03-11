@@ -2,12 +2,14 @@ const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const ROOT = path.resolve( __dirname, '.' );
 const SRC = path.resolve( __dirname, 'src' );
+const TEST = path.resolve( __dirname, 'test' );
 const DIST = path.resolve(__dirname, 'dist');
 
 module.exports = {
-    context: SRC,
-    entry: 'code/index.ts',
+    context: ROOT,
+    entry: './src/code/index.ts',
     module: {
         rules: [
                 // PRE-LOADERS
@@ -47,7 +49,11 @@ module.exports = {
         ]
     },
     output: {
-        path: DIST
+        path: DIST,
+        devtoolModuleFilenameTemplate: function(info) {
+            return '../'+info.resourcePath;
+            // return "file:///"+info.absoluteResourcePath;
+        }
     },
     plugins: [
         new CleanWebpackPlugin([DIST]),

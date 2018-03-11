@@ -11,9 +11,9 @@ export class ConsoleRenderer implements IRenderer {
 
     public render(state: IGameRenderState) {
         const cells: number[][] = [];
-        for (let y = 0; y < state.grid.size; y++) {
+        for (let y = 0; y < state.size; y++) {
             cells[y] = [];
-            for (let x = 0; x < state.grid.size; x++) {
+            for (let x = 0; x < state.size; x++) {
                 cells[y][x] = 0;
             }
         }

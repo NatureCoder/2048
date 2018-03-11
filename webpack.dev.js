@@ -9,7 +9,7 @@ module.exports = merge(common, {
     plugins: [
         new HtmlWebpackPlugin({
             filename: 'index.html',
-            template: 'index.html',
+            template: 'src/index.html',
             title: '2048 game - development'
         }),
         new webpack.DefinePlugin({
@@ -17,6 +17,6 @@ module.exports = merge(common, {
         })
     ],
     output: {
-        filename: 'bundle.js',
+        filename: 'bundle.js'
     }
 });
