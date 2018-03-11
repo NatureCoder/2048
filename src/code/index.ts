@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function(ev: Event) {
     if (cntnr) {
         const gridsize = 4;
         // const renderer = new ConsoleRenderer();
-        // const renderer = new CanvasRenderer(cntnr);
+        // const renderer = new CanvasRenderer(cntnr, scoreElmt!, highscoreElmt!);
         const renderer = new HTMLRenderer(cntnr, scoreElmt!, highscoreElmt!, gridsize);
         const inputHandler = new InputHandler(cntnr);
         const testvals = [

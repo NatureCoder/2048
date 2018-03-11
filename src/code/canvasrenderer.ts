@@ -1,5 +1,13 @@
 import { IGameState, IRenderer} from './game';
 
+// same values as in styles.sass
+const containerSize = 450;
+const fontsize = 20;
+const cellsize = 100;
+const gridmargin = 15;
+const cellmargin = 4;
+const borderwidth = 4;
+
 export class CanvasRenderer implements IRenderer {
     private container: HTMLElement;
     private canvas: HTMLCanvasElement;
@@ -15,8 +23,6 @@ export class CanvasRenderer implements IRenderer {
         this.highscoreElmt.innerHTML = '';
 
         this.canvas = document.createElement("canvas");
-        this.canvas.width = 600;
-        this.canvas.height = 600;
         this.container.appendChild(this.canvas);
     }
 
@@ -31,30 +37,30 @@ export class CanvasRenderer implements IRenderer {
             ctx.fillStyle = 'dimgray';
             ctx.fillRect(0, 0, w, h);
         }
-        function drawBorder(ctx: CanvasRenderingContext2D, m: number, w: number, h: number) {
+        function drawBorder(ctx: CanvasRenderingContext2D, w: number, h: number) {
             ctx.beginPath();
-            ctx.lineWidth = 2 * m;
+            ctx.lineWidth = 2 * cellmargin;
             ctx.strokeStyle = '#333';
             ctx.rect(0, 0, w, h);
             ctx.stroke();
         }
-        function drawGridLines(ctx: CanvasRenderingContext2D, m: number, w: number, h: number,
-                               size: number, cellSize: number) {
+        function drawGridLines(ctx: CanvasRenderingContext2D, w: number, h: number, size: number) {
             ctx.strokeStyle = '#333';
             ctx.lineWidth = 1;
             ctx.beginPath();
-
+            const siz = (cellmargin + cellsize);
+            const start = gridmargin - cellmargin;
             for (let x = 1; x < size; x++) {
-                ctx.moveTo(m + x * cellSize, m);
-                ctx.lineTo(m + x * cellSize, h + m);
+                ctx.moveTo(start + x * siz, start);
+                ctx.lineTo(start + x * siz, h + start);
             }
             for (let y = 1; y < size; y++) {
-                ctx.moveTo(m, m + y * cellSize);
-                ctx.lineTo(w + m, m + y * cellSize);
+                ctx.moveTo(start, start + y * siz);
+                ctx.lineTo(w + start, start + y * siz);
             }
             ctx.stroke();
         }
-        function drawTiles(ctx: CanvasRenderingContext2D, m: number, cellSize: number) {
+        function drawTiles(ctx: CanvasRenderingContext2D) {
 
             function drawTileBackGround(x: number, y: number, size: number) {
                 const lost = state.done && ! state.won;
@@ -62,7 +68,7 @@ export class CanvasRenderer implements IRenderer {
                 ctx.fillRect(x, y, size, size);
             }
             function drawTileBorder(x: number, y: number, size: number) {
-                const lw = 10;
+                const lw = borderwidth;
                 ctx.beginPath();
                 ctx.lineWidth = lw;
                 ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
@@ -73,14 +79,13 @@ export class CanvasRenderer implements IRenderer {
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
                 ctx.fillText(val, x + size / 2, y + size / 2);
             }
-            const mm = 5;
-            const tileSize = cellSize - mm * 2;
+            const tileSize = cellsize - cellmargin;
             ctx.textAlign = 'center';
-            ctx.font = 'bold 50px Arial';
+            ctx.font = 'bold 20px Arial';
             ctx.textBaseline = 'middle';
             for (const cell of state.grid.cells) {
-                const x = m + mm + cell.pos.x * cellSize;
-                const y = m + mm + cell.pos.y * cellSize;
+                const x = gridmargin + (cellmargin + cellsize) * cell.pos.x;
+                const y = gridmargin + (cellmargin + cellsize) * cell.pos.y;
                 const val = cell.val.toString();
                 drawTileBackGround(x, y, tileSize);
                 drawTileBorder(x, y, tileSize);
@@ -88,21 +93,22 @@ export class CanvasRenderer implements IRenderer {
             }
         }
 
+        const cols = state.grid.size;
+        const gridsize = (cols * cellsize) + (cols - 1) * cellmargin + (2 * gridmargin);
+        this.canvas.width = gridsize;
+        this.canvas.height = gridsize;
         window.requestAnimationFrame(() => {
             const ctx = this.canvas.getContext("2d");
             if (ctx) {
                 ctx.save();
-                let width = this.canvas.clientWidth;
-                let height = this.canvas.clientHeight;
-                const margin = 10;
-                const cols = state.grid.size;
+                let width = gridsize;
+                let height = gridsize;
                 clearBackground(ctx, width, height);
-                drawBorder(ctx, margin, width, height);
-                width -= (2 * margin);
-                height -= (2 * margin);
-                const cellSize = width / cols;
-                drawGridLines(ctx, margin, width, height, cols, cellSize);
-                drawTiles(ctx, margin, cellSize);
+                drawBorder(ctx, width, height);
+                width -= (2 * gridmargin);
+                height -= (2 * gridmargin);
+                drawGridLines(ctx, width, height, cols);
+                drawTiles(ctx);
                 ctx.restore();
             }
         });
