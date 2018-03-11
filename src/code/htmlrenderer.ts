@@ -20,6 +20,7 @@ interface ITileToFlip {
 export class HTMLRenderer implements IRenderer {
     private container: HTMLElement;
     private scoreElmt: HTMLElement;
+    private highscoreElmt: HTMLElement;
     private doneStateRendered: boolean = false;
     private renderDoneStateAfter: boolean = false;
     private cellsToMove: ICellToAnimate[] = [];
@@ -27,16 +28,19 @@ export class HTMLRenderer implements IRenderer {
     private cellsToDisappear: ICellToAnimate[] = [];
     private tilesToFlip: ITileToFlip[] = [];
 
-    constructor(container: HTMLElement, scoreElmt: HTMLElement, gridsize: number) {
+    constructor(container: HTMLElement, scoreElmt: HTMLElement, highscoreElmt: HTMLElement, gridsize: number) {
         this.container = container;
         this.container.innerHTML = '';
         this.scoreElmt = scoreElmt;
         this.scoreElmt.innerHTML = '';
+        this.highscoreElmt = highscoreElmt;
+        this.highscoreElmt.innerHTML = '';
         this.setGridSizeCSS(gridsize);
     }
 
-    public updatescore(score: number) {
+    public updatescores(score: number, highscore: number) {
         this.scoreElmt.innerHTML = score.toString();
+        this.highscoreElmt.innerHTML = highscore.toString();
     }
 
     public render(state: IGameState) {

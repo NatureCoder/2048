@@ -4,12 +4,15 @@ export class CanvasRenderer implements IRenderer {
     private container: HTMLElement;
     private canvas: HTMLCanvasElement;
     private scoreElmt: HTMLElement;
+    private highscoreElmt: HTMLElement;
 
-    constructor(container: HTMLElement, scoreElmt: HTMLElement) {
+    constructor(container: HTMLElement, scoreElmt: HTMLElement, highscoreElmt: HTMLElement) {
         this.container = container;
         this.container.innerHTML = '';
         this.scoreElmt = scoreElmt;
         this.scoreElmt.innerHTML = '';
+        this.highscoreElmt = highscoreElmt;
+        this.highscoreElmt.innerHTML = '';
 
         this.canvas = document.createElement("canvas");
         this.canvas.width = 600;
@@ -17,9 +20,11 @@ export class CanvasRenderer implements IRenderer {
         this.container.appendChild(this.canvas);
     }
 
-    public updatescore(score: number) {
+    public updatescores(score: number, highscore: number) {
         this.scoreElmt.innerHTML = score.toString();
+        this.highscoreElmt.innerHTML = highscore.toString();
     }
+
     public render(state: IGameState) {
 
         function clearBackground(ctx: CanvasRenderingContext2D, w: number, h: number) {

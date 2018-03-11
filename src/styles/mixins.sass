@@ -7,3 +7,8 @@
 @mixin gridsize($cellsize, $cellmargin, $gridmargin)
     width: calc((var(--gridsize) * #{$cellsize}) + (var(--gridsize) - 1) * #{$cellmargin} + (2 * #{$gridmargin}))
     height: calc((var(--gridsize) * #{$cellsize}) + (var(--gridsize) - 1) * #{$cellmargin} + (2 * #{$gridmargin}))
+
+@mixin clearfix()
+    content: ''
+    clear: both
+    display: table

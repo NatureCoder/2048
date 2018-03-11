@@ -9,11 +9,12 @@ import { Grid } from './grid';
 document.addEventListener('DOMContentLoaded', function(ev: Event) {
     const cntnr = document.getElementById('game');
     const scoreElmt = document.getElementById('score');
+    const highscoreElmt = document.getElementById('highscore');
     if (cntnr) {
         const gridsize = 4;
         // const renderer = new ConsoleRenderer();
         // const renderer = new CanvasRenderer(cntnr);
-        const renderer = new HTMLRenderer(cntnr, scoreElmt!, gridsize);
+        const renderer = new HTMLRenderer(cntnr, scoreElmt!, highscoreElmt!, gridsize);
         const inputHandler = new InputHandler(cntnr);
         const testvals = [
             32,   64,   4,   16,

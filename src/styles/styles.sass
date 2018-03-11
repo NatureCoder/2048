@@ -29,36 +29,62 @@ body
     padding: 20px
 
 h1
+    display: inline-block
+    float: left
     margin-top: 0
-    margin-bottom: 20px
+    margin-bottom: 30px
     font-size: 50pt
+    line-height: 50px
     color: chocolate
     text-shadow: 0 2px 2px white
 
-#restart, #score
+#back, #restart, #score, #highscore
     display: inline-block
-    width: 100px
-    height: 30px
-    line-height: 30px
-    margin: 30px 0
     padding: 5px
-    border: 2px solid $bordercolor
+    border: 1px solid $bordercolor
     border-radius: 10px
     background: $bgcolor
     text-align: center
-    font-size: 20pt
     cursor: pointer
-
-#restart
-    float: left
     color: $bordercolor
+
+#restart, #back
+    float: left
+    width: 100px
+    height: 30px
+    line-height: 30px
+    margin-bottom: 30px
+    margin-right: 10px
+    font-size: 15pt
     &:hover
         color: $txtcolor
         border-color: $txtcolor
 
-#score
+#restart
+    clear: left
+
+#score, #highscore
     float: right
     color: $txtcolor
+    height: 50px
+    width: 120px
+    font-size: 20pt
+    font-weight: bold
+    padding-top: 0
+    margin-bottom: 10px
+    &:before
+        display: block
+        font-size: 12pt
+        font-weight: normal
+        color: $bordercolor
+
+#score:before
+    content: 'score'
+#score
+    clear: right
+
+#highscore:before
+    content: 'best'
 
 #game
     position: relative
@@ -75,9 +101,8 @@ h1
 #gameover
     z-index: 100
     font-size: 30pt
-    background: black
+    background: rgba(0, 0, 0, 0.6)
     color: $txtcolor
-    opacity: 0.8
     span
         display: inline-block
         width: 90%

@@ -5,8 +5,8 @@ export class ConsoleRenderer implements IRenderer {
         //
     }
 
-    public updatescore(score: number) {
-        console.log(`score: ${score}`);
+    public updatescores(score: number, highscore: number) {
+        console.log(`score: ${score}, best: ${highscore}`);
     }
 
     public render(state: IGameState) {

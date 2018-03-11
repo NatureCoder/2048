@@ -10,12 +10,13 @@ export interface IGameState {
     won: boolean;
     done: boolean;
     score: number;
+    highscore: number;
     grid: IGridState;
 }
 
 export interface IRenderer {
     render(state: IGameState): void;
-    updatescore(score: number): void;
+    updatescores(score: number, highscore: number): void;
 }
 
 export class Game {
@@ -25,6 +26,7 @@ export class Game {
         game._won = state.won;
         game._done = state.done;
         game._score = state.score;
+        game._highscore = state.highscore;
         return game;
     }
 
@@ -32,6 +34,7 @@ export class Game {
     private _won: boolean = false;
     private _done: boolean = false;
     private _score: number = 0;
+    private _highscore: number = 0;
     private _renderer?: IRenderer;
     private _inputHandler?: InputHandler;
     get won() {
@@ -43,13 +46,22 @@ export class Game {
     set done(val) {
         this._done = val;
     }
+    get highscore() {
+        return this._highscore;
+    }
+    set highscore(val) {
+        this._highscore = val;
+    }
     get score() {
         return this._score;
     }
     set score(val) {
         this._score = val;
+        if (val > this.highscore) {
+            this._highscore = val;
+        }
         if (this._renderer) {
-            this._renderer.updatescore(val);
+            this._renderer.updatescores(val, this.highscore);
         }
     }
 
@@ -95,6 +107,7 @@ export class Game {
             won: this.won,
             done: this.done,
             score: this.score,
+            highscore: this.highscore,
             grid: this.grid.toState()
         };
     }
