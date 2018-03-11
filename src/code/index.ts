@@ -1,4 +1,4 @@
-import './styles.sass';
+import '../styles/styles.sass';
 import { Game } from './game';
 import { ConsoleRenderer} from './consolerenderer';
 import { CanvasRenderer } from './canvasrenderer';

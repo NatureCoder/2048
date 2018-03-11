@@ -1,8 +1,8 @@
 import 'mocha';
 import { expect } from 'chai';
 
-import { Grid } from '../src/grid';
-import { Pos } from '../src/position';
+import { Grid } from '../src/code/grid';
+import { Pos } from '../src/code/position';
 
 describe('Grid', function() {
     const grid = new Grid(4);

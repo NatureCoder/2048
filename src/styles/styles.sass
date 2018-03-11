@@ -1,3 +1,5 @@
+@import './mixins'
+
 $fontsize: 20px
 $cellsize: 100px
 $gridmargin: 15px
@@ -15,42 +17,51 @@ body
     margin: 0
     padding: 0
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+    user-select: none
 
-#restart
+.container
+    width: 450px
+    margin: 0 auto
+    padding: 20px
+    position: relative
+
+h1
+    font-size: 50pt
+    color: chocolate
+    text-shadow: 0 2px 2px white
+    text-align: left
+    margin-top: 0
+    margin-bottom: 20px
+
+#restart, #score
     border: 2px solid #888
     background: #333
     text-align: center
     font-size: 20pt
     height: 30px
     width: 100px
-    margin: 30px 50px 30px 0
     border-radius: 10px
     display: inline-block
     line-height: 30px
-    color: #888
     padding: 5px
     cursor: pointer
-    user-select: none
+
+#restart
+    color: #888
+    margin: 30px 50px 30px 0
     &:hover
         color: #ccc
         border-color: #ccc
 
 #score
-    border: 2px solid #888
-    background: #333
-    text-align: center
-    font-size: 20pt
-    height: 30px
-    width: 100px
     position: absolute
     right: 0
     margin: 30px 30px 30px 0
-    border-radius: 10px
-    display: inline-block
-    line-height: 30px
     color: #ccc
-    padding: 5px
-    user-select: none
+
+#game
+    width: 100%
+    position: relative
 
 #gameover
     position: relative
@@ -73,25 +84,6 @@ body
         top: 50%
         left: 50%
         transform: translate(-50%, -50%)
-        user-select: none
-
-.container
-    width: 450px
-    margin: 0 auto
-    padding: 20px
-    position: relative
-    // border: 1px solid white;
-h1
-    font-size: 50pt
-    color: chocolate
-    text-shadow: 0 2px 2px white
-    text-align: left
-    margin-top: 0
-    margin-bottom: 20px
-
-#game
-    width: 100%
-    position: relative
 
 .grid
     // background-image: repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.1) 15px, rgba(255,255,255,.1) 30px)
@@ -143,7 +135,6 @@ h1
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
     font-size: $fontsize
     font-weight: bold
-    user-select: none
     box-sizing: border-box
     border: $borderwidth solid red
     border-radius: $cellsize / 8

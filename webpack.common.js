@@ -7,7 +7,7 @@ const DIST = path.resolve(__dirname, 'dist');
 
 module.exports = {
     context: SRC,
-    entry: 'index.ts',
+    entry: 'code/index.ts',
     module: {
         rules: [
                 // PRE-LOADERS
@@ -44,7 +44,7 @@ module.exports = {
         modules: [
             SRC,
             'node_modules'
-]
+        ]
     },
     output: {
         path: DIST

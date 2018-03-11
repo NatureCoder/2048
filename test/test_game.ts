@@ -1,11 +1,11 @@
 import 'mocha';
 import { expect } from 'chai';
 
-import { Grid } from '../src/grid';
-import { Game } from '../src/game';
-import { Cell, CellOrNull } from '../src/cell';
-import { Pos } from '../src/position';
-import { direction } from '../src/direction';
+import { Grid } from '../src/code/grid';
+import { Game } from '../src/code/game';
+import { Cell, CellOrNull } from '../src/code/cell';
+import { Pos } from '../src/code/position';
+import { direction } from '../src/code/direction';
 
 describe('Game', function() {
     const grid = new Grid(4);
