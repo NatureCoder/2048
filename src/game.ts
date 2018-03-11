@@ -40,6 +40,9 @@ export class Game {
     get done() {
         return this._done;
     }
+    set done(val) {
+        this._done = val;
+    }
     get score() {
         return this._score;
     }
@@ -128,6 +131,9 @@ export class Game {
     }
 
     public playMove(dir: direction) {
+        if (this.done) {
+            return;
+        }
         const changed = this.makeMove(dir);
         if (changed) {
             const pos = this.grid.randomEmptyPosition();
