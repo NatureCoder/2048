@@ -172,6 +172,21 @@ describe('Game', function() {
             const test = testGame.canMakeMove();
             expect(test).to.equal(false);
         });
+
+        it('returns true when merging is possible between a just merged tile and a new tile', function() {
+            const test3 = [
+                32,   64,   8,    16,
+                128,  512,  32,    2,
+                  2,    8,  64,  256,
+                  2,  128,   8, 1024
+            ];
+            const gr = Grid.fromArray(test3);
+            const testGame = new Game(gr);
+            expect(testGame.canMakeMove()).to.equal(true);
+            testGame.playMove(direction.Up);
+            testGame.grid.addCell(new Pos(0, 3), 4);
+            expect(testGame.canMakeMove()).to.equal(true);
+        });
     });
     describe('playMove', function() {
         it('sets done=true & won=false when no more moves possible after adding last number', function() {

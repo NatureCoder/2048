@@ -92,7 +92,7 @@ export class HTMLRenderer implements IRenderer {
             this.container.appendChild(grid);
 
             if (state.done) {
-                // render game over state
+                // render "game over" state
                 const gameover = document.createElement('div');
                 gameover.id = 'gameover';
                 gameover.innerHTML = '<span>no more moves\nGAME OVER</span>';
