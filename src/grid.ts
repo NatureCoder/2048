@@ -168,12 +168,14 @@ export class Grid {
                 const right = x < this.size - 1 ? this.xyToIndex(x + 1, y) : null;
                 const below = y < this.size - 1 ? this.xyToIndex(x, y + 1) : null;
                 const cell = this._cells[idx];
+                const cellRight = right ? this._cells[right] : null;
+                const cellBelow = below ? this._cells[below] : null;
                 if (cell) {
                     // only need to check to the right and below:
-                    if ((right && cell.canMergeWith(this._cells[right])) ||
-                        (below && cell.canMergeWith(this._cells[below]))) {
-                            return true;
-                        }
+                    if ((cellRight && (cell.val === cellRight.val)) ||
+                        (cellBelow && (cell.val === cellBelow.val))) {
+                        return true;
+                    }
                 }
             }
         }
