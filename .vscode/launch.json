@@ -8,10 +8,11 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome",
-            "url": "http://127.0.0.1:8080/index.html",
-            "webRoot": "${workspaceFolder}"
+            "url": "http://127.0.0.1:8080/dist/index.html",
+            "webRoot": "${workspaceFolder}",
             // "trace": "verbose",
-            // "sourceMaps": true
+            // "breakOnLoad": true,
+            "sourceMaps": true
         },
         {
             "type": "node",

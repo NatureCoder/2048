@@ -7,7 +7,17 @@ import { InputHandler } from './inputhandler';
 import { Grid } from './grid';
 import { GameStorage } from './storage';
 
+if (document.readyState === 'complete') {
+    console.log( 'document is already ready' );
+    startup();
+} else {
 document.addEventListener('DOMContentLoaded', function(ev: Event) {
+        console.log( 'DOMContentLoaded' );
+        startup();
+    });
+}
+
+function startup() {
     const cntnr = document.getElementById('game');
     const restartBtn = document.getElementById('restart') as HTMLDivElement;
     const scoreElmt = document.getElementById('score');
@@ -36,4 +46,4 @@ document.addEventListener('DOMContentLoaded', function(ev: Event) {
         }
         game.start(2);
     }
-});
+}

@@ -1,7 +1,7 @@
 {
     "eslint.enable": false,
     "liveServer.settings.CustomBrowser": "chrome",
-    "liveServer.settings.root": "/dist",
+    "liveServer.settings.root": "/",
     // "liveServer.settings.root": "/src/animationeffect",
     "editor.detectIndentation": false,
     "files.trimTrailingWhitespace": true
