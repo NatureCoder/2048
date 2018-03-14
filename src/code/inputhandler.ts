@@ -7,28 +7,32 @@ interface IEvents {
 
 export interface IInputHandler {
     on(event: string, cb: callback): void;
+    reset(): void;
 }
 
 export class InputHandler implements IInputHandler {
-    private container: HTMLElement;
-    private events: IEvents;
-    private restartBtn: HTMLElement;
+    private _container: HTMLElement;
+    private _events: IEvents = {};
+    private _restartBtn: HTMLElement;
 
     constructor(container: HTMLElement, restartBtn: HTMLElement) {
-        this.container = container;
+        this._container = container;
         document.addEventListener('keydown', this.handleKeyDown.bind(this));
-        this.restartBtn = restartBtn;
-        this.restartBtn.addEventListener('click', this.restartClick.bind(this));
-        this.events = {};
+        this._restartBtn = restartBtn;
+        this._restartBtn.addEventListener('click', this.restartClick.bind(this));
+        this.reset();
+    }
+    public reset() {
+        this._events = {};
     }
 
     public on(event: string, cb: callback) {
-        this.events[event] = (this.events[event] || []);
-        this.events[event].push(cb);
+        this._events[event] = (this._events[event] || []);
+        this._events[event].push(cb);
     }
 
     private trigger(event: string, ...args: any[]) {
-        const callbacks = this.events[event];
+        const callbacks = this._events[event];
         for (const cb of callbacks) {
             cb(...args);
         }

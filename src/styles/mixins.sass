@@ -5,10 +5,36 @@
     transform: translate(-50%, -50%)
 
 @mixin gridsize($cellsize, $cellmargin, $gridmargin)
-    width: calc((var(--gridsize) * #{$cellsize}) + (var(--gridsize) - 1) * #{$cellmargin} + (2 * #{$gridmargin}))
-    height: calc((var(--gridsize) * #{$cellsize}) + (var(--gridsize) - 1) * #{$cellmargin} + (2 * #{$gridmargin}))
+    --cells: calc(var(--gridsize) * #{$cellsize})
+    --margins: calc((var(--gridsize) - 1) * #{$cellmargin})
+    // width: calc((var(--gridsize) * #{$cellsize}) + (var(--gridsize) - 1) * #{$cellmargin} + (2 * #{$gridmargin}))
+    // height: calc((var(--gridsize) * #{$cellsize}) + (var(--gridsize) - 1) * #{$cellmargin} + (2 * #{$gridmargin}))
+    width: calc(var(--cells) + var(--margins) + (2 * #{$gridmargin}))
+    height: calc(var(--cells) + var(--margins) + (2 * #{$gridmargin}))
+
+@mixin containersize($cellsize, $cellmargin, $gridmargin)
+    --scale: calc(1.25 - (var(--gridsize) / 16))
+    --cells: calc(var(--gridsize) * #{$cellsize})
+    --margins: calc((var(--gridsize) - 1) * #{$cellmargin})
+    --width: calc(var(--cells) + var(--margins) + (2 * #{$gridmargin}))
+    width: calc(var(--scale) * var(--width))
+
+@mixin scale()
+    transform-origin: top left
+    transform: scale(calc(1.25 - (var(--gridsize) / 16) ))
 
 @mixin clearfix()
     content: ''
     clear: both
     display: table
+
+@mixin unselectable()
+    -moz-user-select: none
+    -webkit-user-select: none
+    -ms-user-select: none
+    user-select: none
+
+@mixin noappearance()
+    -webkit-appearance: none
+    -moz-appearance: none
+    appearance: none

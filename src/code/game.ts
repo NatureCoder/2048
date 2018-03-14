@@ -94,6 +94,7 @@ export class Game {
         this._storage = storage;
         this._started = fromState;
         if (this._inputHandler) {
+            this._inputHandler.reset();
             this._inputHandler.on('move', this.playMove.bind(this));
             this._inputHandler.on('restart', this.restart.bind(this));
         }

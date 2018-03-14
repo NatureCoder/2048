@@ -1,0 +1,60 @@
+@import './mixins'
+@import './consts'
+
+form
+    float: left
+    // clear: left
+    margin-bottom: 20px
+
+.select-wrap
+    width: 100px
+    height: 32px
+    position: relative
+    float: left
+    color: $bordercolor
+    overflow: hidden
+
+.select-wrap:after
+    width: 10%
+    height: 100%
+    position: absolute
+    right: 10px
+    top: 0
+    z-index: 1
+    padding: 4px 8px
+    text-align: center
+    content: "▼"
+    pointer-events: none
+
+label
+    height: 32px
+    float: left
+    clear: left
+    margin-right: 12px
+    line-height: 30px
+    font-size: 14pt
+    color: $bordercolor
+
+select
+    width: 100px
+    height: 32px
+    border: 1px solid $bordercolor
+    border-radius: 6px
+    background: $bgcolor
+    color: $bordercolor
+    font-size: 12pt
+    @include noappearance()
+    text-indent: 10px
+    cursor: pointer
+    &:hover
+        border-color: $txtcolor
+        color: $txtcolor
+    &:focus
+        outline: none
+    option
+        color: $bordercolor
+        &:focus
+            outline: none
+        &:checked
+            background-color: #444
+            color: $txtcolor

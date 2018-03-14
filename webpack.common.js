@@ -3,7 +3,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const ROOT = path.resolve( __dirname, '.' );
-const SRC = path.resolve( __dirname, 'src' );
+const SRC  = path.resolve( __dirname, 'src' );
 const TEST = path.resolve( __dirname, 'test' );
 const DIST = path.resolve(__dirname, 'dist');
 

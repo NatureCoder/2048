@@ -1,17 +1,6 @@
 @import './mixins'
-
-$containersize: 450px
-$fontsize: 20px
-$cellsize: 100px
-$gridmargin: 15px
-$cellmargin: 4px
-$borderwidth: 4px
-$duration: 0.25s
-$expmax: 11
-
-$bgcolor: #282828
-$bordercolor: #888
-$txtcolor: #ccc
+@import './select'
+@import './consts'
 
 html
     --gridsize: 4 // max 16
@@ -22,10 +11,13 @@ body
     background-color: $bgcolor
     background-size: 16px 16px
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
-    user-select: none
+    font-size: 14pt
+    @include unselectable()
+    color: $txtcolor
+    background: $bgcolor
 
 .container
-    width: $containersize
+    @include containersize($cellsize, $cellmargin, $gridmargin)
     margin: 0 auto
     padding: 20px
 
@@ -33,9 +25,9 @@ h1
     display: inline-block
     float: left
     margin-top: 0
-    margin-bottom: 30px
-    font-size: 50pt
-    line-height: 50px
+    margin-bottom: 24px
+    font-size: 40pt
+    line-height: 40px
     color: chocolate
     text-shadow: 0 2px 2px white
 
@@ -43,20 +35,20 @@ h1
     display: inline-block
     padding: 5px
     border: 1px solid $bordercolor
-    border-radius: 10px
+    border-radius: 6px
     background: $bgcolor
     text-align: center
-    cursor: pointer
     color: $bordercolor
 
 #restart, #back
     float: left
-    width: 100px
-    height: 30px
-    line-height: 30px
-    margin-bottom: 30px
+    width: 80px
+    height: 20px
+    line-height: 18px
+    margin-bottom: 10px
     margin-right: 10px
     font-size: 15pt
+    cursor: pointer
     &:hover
         color: $txtcolor
         border-color: $txtcolor
@@ -67,22 +59,25 @@ h1
 #score, #highscore
     float: right
     color: $txtcolor
-    height: 50px
-    width: 120px
-    font-size: 20pt
+    height: 44px
+    width: 100px
+    font-size: 17pt
     font-weight: bold
     padding-top: 0
     margin-bottom: 10px
     &:before
         display: block
         font-size: 12pt
+        line-height: 18px
         font-weight: normal
         color: $bordercolor
+        padding: 0
 
 #score:before
     content: 'score'
 #score
     clear: right
+    margin-bottom: 20px
 
 #highscore:before
     content: 'best'
@@ -90,6 +85,7 @@ h1
 #game
     position: relative
     @include gridsize($cellsize, $cellmargin, $gridmargin)
+    @include scale()
     clear: both
     text-align: center
     box-shadow: 0px 0px 0px 5px #444, 0px 0px 0px 7px $bordercolor, 0px 0px 0px 12px #000
