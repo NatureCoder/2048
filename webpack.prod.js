@@ -1,12 +1,11 @@
 const webpack = require('webpack');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = merge(common, {
     devtool: 'source-map',
-    mode: 'development',
+    mode: 'production',
     module: {
         rules: [
             // PRE-LOADERS
@@ -25,9 +24,6 @@ module.exports = merge(common, {
         ]
     },
     plugins: [
-        new UglifyJSPlugin({
-            sourceMap: true
-        }),
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: 'src/index.html',

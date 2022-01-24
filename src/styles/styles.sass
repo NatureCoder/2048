@@ -144,7 +144,7 @@ h1
     top: 0
     left: 0
     border: $borderwidth solid red
-    border-radius: $cellsize / 8
+    border-radius: calc($cellsize / 8)
     box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.7)
     backface-visibility: hidden
     font-size: $fontsize
@@ -160,13 +160,13 @@ h1
 @for $i from 0 through 16 - 1
     .x-#{$i}
         left: $gridmargin + ($cellsize + $cellmargin) * $i
-        @if $i = 0
+        @if $i == 0
             margin-left: -$cellmargin
 
 @for $i from 0 through 16 - 1
     .y-#{$i}
         top: $gridmargin + ($cellsize + $cellmargin) * $i
-        @if $i = 0
+        @if $i == 0
             margin-top: -$cellmargin
 
 /* styles for tile values (.val-11 = pow(2, 11) =2048) */
@@ -174,7 +174,7 @@ h1
 $startcol: #AFEEEE
 @for $i from 0 through $expmax
     .val-#{$i}
-        $deg: (360deg / 11) * $i
+        $deg: calc(360deg / 11) * $i
         $col: adjust-hue($startcol, $deg)
         background: $col
         border-color: darken($col, 30%)
